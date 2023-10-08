@@ -6,6 +6,9 @@ Site:
 					Split expense viewing options
 					Access control list based login
 	
+	Optional Requirements:
+					House details
+					
 	Teck stack:
 				Git version control
 				Token based web access
