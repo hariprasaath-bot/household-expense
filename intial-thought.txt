@@ -1,0 +1,112 @@
+Site: 
+	Initial Requirements:
+					User based login
+					Enter Expense household
+					Enter Expense Personel
+					Split expense viewing options
+					Access control list based login
+	
+	Teck stack:
+				Git version control
+				Token based web access
+				SQL database to maintain data
+				Java springboot / C# DotNET
+				Angular / React front-end
+				Docker Based deployment
+				
+	
+	Functional Level Designs:
+				
+				site_pages:
+						1.Login page
+						2.Admin login
+						3.user login landing page 
+						4.user profile
+						5.personal expense details --> personal expense form page
+						6.household expense details --> household expense create page
+						7.household expense authorise page (admin)
+						8.About page
+	
+				url_mappings:
+						1. login page --> /login
+						2. Admin login --> /login
+						3. user login landing page --> /HomePage
+						4. user profile --> /profile
+						5. personal expense details --> /personalexpense
+						6. personal expense form page --> /expenseform
+						7.household expense details --> /householdexpense
+						8.household expense create page --> /expenseform
+						7.household expense authorise page (admin) --> /approve
+						8.About page --> /about
+	
+				
+				SQL schemas:
+							User_table:
+										ID
+										user_access_key_mapping_id
+										Name
+										status
+										created date
+										modified date
+										
+							user_access_key_mapping:
+										ID
+										user_id
+										access_key
+										
+							status_master:
+										ID
+										status name
+							
+							Personel_accounts_table:
+										ID
+										user_id
+										transaction_type
+										amount_value
+										created_date
+										modified_date
+										
+							Personel_accounts_split:
+										ID
+										personel_accounts_table_id
+										user_id
+										transaction_type
+										amount_value
+										created_date
+										modified_date
+										
+							Household_accounts_table:
+										ID
+										user_id
+										transaction_type
+										amount_value
+										accepted_status
+										created_date
+										modified_date
+							
+							accepted_status_master:
+										ID
+										accepted_status_master_name
+						
+							Household_accounts_split:
+										ID
+										household_accounts_table_id
+										user_id
+										transaction_type
+										amount_value
+										created_date
+										modified_date
+							
+							transaction_type_master:
+										ID
+										transaction_type_name
+							
+							
+										
+										
+										
+										
+										
+										
+					
+					
