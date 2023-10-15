@@ -86,6 +86,7 @@ Site:
 										transaction_type
 										amount_value
 										accepted_status
+										Household_accounts_split_id
 										created_date
 										modified_date
 							
