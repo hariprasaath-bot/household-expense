@@ -1,0 +1,30 @@
+<div class="container">
+    <div class="header">
+      <h2>Register Inmate</h2>
+      <p style="color:red">Please fill the details if you are alive only.</p>
+    </div>
+    <div class="form">
+      <form [formGroup]="UserForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="Name">Name:</label>
+          <input type="text" formControlName="name" id="name" name="name" class="form-control" placeholder="Govindan" required>
+        </div>
+        <div class="form-group">
+            <label for="Status">Status:</label>
+            <select formControlName="status" id="status" name="status" class="form-control">
+              <option value="">Select an option</option>
+              <option value="dead">dead</option>
+              <option value="alive">alive</option>
+            </select>
+          </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" formControlName="email" id="email" name="email" class="form-control" placeholder="johndoe@example.com" required>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
