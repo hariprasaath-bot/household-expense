@@ -2,6 +2,7 @@ package in.house.financial.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -10,14 +11,16 @@ import java.util.List;
 
 @Entity
 @Table(name = "household_accounts_table")
+@Data
 public class HouseholdAccountsTable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @OneToOne
+    @JoinColumn(name = "inmates_id")
+    private User user;
 
     @Column(name = "transaction_type")
     private String transactionType;
@@ -27,9 +30,6 @@ public class HouseholdAccountsTable {
 
     @Column(name = "accepted_status")
     private String acceptedStatus;
-
-    @Column(name = "household_accounts_split_id")
-    private Long householdAccountsSplitId;
 
     @Column(name = "created_date")
     @JsonIgnore
@@ -41,7 +41,8 @@ public class HouseholdAccountsTable {
     @UpdateTimestamp
     private Date modifiedDate;
 
-    @OneToMany(mappedBy = "householdAccountsTable")
+    @OneToMany
+    @JoinColumn(name="household_accounts_split_id")
     private List<HouseholdAccountsSplit> householdAccountsSplits;
 
 }

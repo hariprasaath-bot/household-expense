@@ -3,8 +3,6 @@ package in.house.financial.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
-
 @Entity
 @Data
 @Table(name = "household_accounts_split")
@@ -18,8 +16,9 @@ public class HouseholdAccountsSplit {
     @JoinColumn(name = "household_accounts_table_id")
     private HouseholdAccountsTable householdAccountsTable;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @OneToOne
+    @JoinColumn(name = "inmates_id")
+    private User user;
 
     @Column(name = "transaction_type")
     private String transactionType;

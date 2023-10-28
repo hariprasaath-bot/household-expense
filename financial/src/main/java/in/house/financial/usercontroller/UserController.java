@@ -10,23 +10,23 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public class UserController {
     @Autowired
-    UserService userServicesImpl;
+    UserService userServices;
     @PostMapping("/create")
     public ResponseEntity<String> createUser(@RequestBody User user){
-        return userServicesImpl.createUser(user);
+        return userServices.createUser(user);
     }
 
     @PostMapping("/update")
     public ResponseEntity<String> updateUser(@RequestBody User user){
-        return userServicesImpl.updateUser(user);
+        return userServices.updateUser(user);
     }
 
     @DeleteMapping("/delete/{cuid}")
     public ResponseEntity<String> deleteUser(@PathVariable Integer cuid){
-        return userServicesImpl.deleteUser(cuid);
+        return userServices.deleteUser(cuid);
     }
     @GetMapping("/deactivate/{cuid}")
     public ResponseEntity<String> deactivateUser(@PathVariable Integer cuid){
-        return userServicesImpl.deactivateUser(cuid);
+        return userServices.deactivateUser(cuid);
     }
 }

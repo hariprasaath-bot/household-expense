@@ -22,6 +22,9 @@ public class User {
     private String email;
     @Column
     private String status;
+    @OneToOne
+    @JoinColumn(name="user_access_key_mapping_id")
+    private UserAcessKey userAcessKey;
     @Column
     @JsonIgnore
     @CreationTimestamp
