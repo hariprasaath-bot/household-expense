@@ -22,6 +22,11 @@ public class User {
     private String email;
     @Column
     private String status;
+
+
+    @ManyToOne
+    @JoinColumn(name = "user_role_id")
+    private UserRoles userRole;
     @OneToOne
     @JoinColumn(name="user_access_key_mapping_id")
     private UserAcessKey userAcessKey;

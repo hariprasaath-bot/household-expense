@@ -1,4 +1,4 @@
-package in.house.financial.usercontroller;
+package in.house.financial.controllers.usercontroller;
 
 import in.house.financial.entity.User;
 import in.house.financial.interfaces.UserService;

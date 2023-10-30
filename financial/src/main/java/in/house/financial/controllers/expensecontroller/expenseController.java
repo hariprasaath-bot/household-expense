@@ -1,4 +1,4 @@
-package in.house.financial.expensecontroller;
+package in.house.financial.controllers.expensecontroller;
 
 import in.house.financial.RequestDTO.ExpenseForm;
 import in.house.financial.services.ExpenseImpl;
