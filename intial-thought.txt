@@ -128,6 +128,30 @@ Audio
         : pause
         : 2 days resume
         : 30 min -> transcript -> CHATGPT API -> summarize -> text to audio (NLP) -> UI
+
+
+git clone <link>
+
+git pull
+
+// show current branch
+git branch
+
+show all branches
+git branch -a
+
+// check branch selected is main
+// create new branch
+git checkout -b "branchname"
+
+// move to existing branch
+git checkout "branchname"
+
+git status
+
+git commit -m "message"
+
+git push
 							
 							
 										
