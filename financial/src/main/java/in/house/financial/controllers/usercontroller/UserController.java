@@ -28,6 +28,7 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@PathVariable Integer cuid){
         return userServices.deleteUser(cuid);
     }
+
     @GetMapping("/deactivate/{cuid}")
     public ResponseEntity<String> deactivateUser(@PathVariable Integer cuid){
         return userServices.deactivateUser(cuid);

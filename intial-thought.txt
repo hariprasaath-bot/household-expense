@@ -152,7 +152,43 @@ git status
 git commit -m "message"
 
 git push
-							
+
+
+
+Build requirements
+    maven
+    Java JDK 17 or high
+
+
+    build command : mvn clean install
+    Run command : java -jar <jarname>
+    url : http://localhost:8080/user/create
+            POST call
+            Payload :
+                    {
+                      "firstName": "firstName_057db3e2c55a",
+                      "lastName": "lastName_289fa0a515b1",
+                      "email": "email_504eb26ad686",
+                      "password": "password_aa4442674765"
+                    }
+
+develop :
+url : http://localhost:8080/expense/add
+{
+  "userId": 1,
+  "transactionType": "debit",
+  "amountValue": 200.00,
+  "acceptedStatus": "ok",
+  "householdAccountsSplit": [
+    {
+      "userId": 2,
+      "transactionType": "credit",
+      "amountValue": 100.00
+    }
+  ],
+  "type": "personal"
+}
+
 							
 										
 										
