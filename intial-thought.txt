@@ -11,7 +11,7 @@ Site:
 					Lifi details
 					address details
 					
-	Teck stack:
+	Tech stack:
 				Git version control
 				Token based web access
 				SQL database to maintain data
@@ -106,6 +106,28 @@ Site:
 							transaction_type_master:
 										ID
 										transaction_type_name
+
+darknet diaries
+
+offer {}
+
+finance
+inventory management
+Audio
+
+
+2 project
+    inventory management
+        : quantities
+        : expiry date
+        : Food / snacks /
+            : data input
+                i.form create entry UI
+                ii. MQTT protocol ->  listen broker
+    Podcast transcribe
+        : pause
+        : 2 days resume
+        : 30 min -> transcript -> CHATGPT API -> summarize -> text to audio (NLP) -> UI
 							
 							
 										

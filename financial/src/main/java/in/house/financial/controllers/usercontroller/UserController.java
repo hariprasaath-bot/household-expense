@@ -1,18 +1,21 @@
 package in.house.financial.controllers.usercontroller;
 
 import in.house.financial.entity.User;
-import in.house.financial.interfaces.UserService;
+import in.house.financial.interfaces.UserInterface;
+import in.house.financial.securityconfig.securityDTO.SignUpRequest;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Data
 @RequestMapping("/user")
 public class UserController {
-    @Autowired
-    UserService userServices;
+
+    private final UserInterface userServices;
     @PostMapping("/create")
-    public ResponseEntity<String> createUser(@RequestBody User user){
+    public ResponseEntity<Object> createUser(@RequestBody SignUpRequest user){
         return userServices.createUser(user);
     }
 

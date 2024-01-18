@@ -1,51 +1,89 @@
 package in.house.financial.services;
 
 import in.house.financial.entity.User;
-import in.house.financial.interfaces.UserService;
+import in.house.financial.entity.UserAccessKey;
+import in.house.financial.interfaces.JwtService;
+import in.house.financial.interfaces.UserInterface;
+import in.house.financial.repository.UserAccessKeyRepository;
 import in.house.financial.repository.UserRepository;
+import in.house.financial.securityconfig.securityDTO.SecurityDTO;
+import in.house.financial.securityconfig.securityDTO.SignUpRequest;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.beans.Transient;
 import java.util.Objects;
 import java.util.Optional;
 
-@Component
 @Slf4j
-public class UserServicesImpl implements UserService {
+@Service
+@RequiredArgsConstructor
+public class UserServicesImpl implements UserInterface {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final UserAccessKeyRepository userAccessKeyRepo;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
-    public ResponseEntity<String> createUser(User user){
-        ResponseEntity<String> reponse ;
+
+
+    public ResponseEntity<Object> createUser(SignUpRequest request){
+        ResponseEntity<Object> response;
         try {
-            if (Objects.isNull(userRepository.findByEmail(user.getEmail()))) {
+            Optional<User> userData = userRepository.findByEmail(request.getEmail());
+            if (userData.isEmpty()) {
+                // Create UserAccessKey
+                UserAccessKey userAccessKey = UserAccessKey.builder()
+                        .accessKey(passwordEncoder.encode(request.getPassword()))
+                        .build();
+                // Save UserAccessKey
+                userAccessKey = userAccessKeyRepo.save(userAccessKey);
+                // Create User and associate UserAccessKey
+                var user = User.builder()
+                        .name(request.getFirstName() + " " + request.getLastName())
+                        .email(request.getEmail())
+                        .status("active")
+                        .userAccessKey(userAccessKey)
+                        .build();
+                // Save User along with UserAccessKey
                 userRepository.save(user);
-                reponse = new ResponseEntity<>("Created successfully", HttpStatus.CREATED);
+
+                // Generate token and create SecurityDTO
+                var jwt = jwtService.generateToken(user);
+                SecurityDTO token = SecurityDTO.builder().token(jwt).build();
+
+                response = ResponseEntity.ok().body(token);
             } else {
-                reponse = new ResponseEntity<>("User Already Exists", HttpStatus.OK);
+                response = new ResponseEntity<>("User Already Exists", HttpStatus.OK);
             }
-        }catch (Exception e){
-            log.info("Exception occurred in creating user (USER MAY BE DEAD) {}",e.getMessage());
-            reponse = new ResponseEntity<>("Exception occurred in creating user (USER MAY BE DEAD)", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            log.info("Exception occurred in creating user (USER MAY BE DEAD) {}", e.getMessage());
+            response = new ResponseEntity<>("Exception occurred in creating user (USER MAY BE DEAD)", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return reponse;
+        return response;
     }
+
 
     public ResponseEntity<String> updateUser(User user){
         ResponseEntity<String> reponse ;
         try {
-            User existingUser = userRepository.findByEmail(user.getEmail());
-            if (Objects.isNull(existingUser)) {
+
+            Optional<User> userData = userRepository.findByEmail(user.getEmail());
+            if (!userData.isPresent()) {
                 reponse = new ResponseEntity<>("User Doesn't Exists", HttpStatus.OK);
             } else {
-                existingUser.setName(user.getName());
-                existingUser.setEmail(user.getEmail());
-                existingUser.setStatus(user.getStatus());
+                User existingUser = userData.get();
+                existingUser.updateUser(user);
                 userRepository.save(existingUser);
                 reponse = new ResponseEntity<>("updated successfully", HttpStatus.CREATED);
             }
