@@ -4,7 +4,6 @@ import in.house.financial.entity.User;
 import in.house.financial.interfaces.UserInterface;
 import in.house.financial.securityconfig.securityDTO.SignUpRequest;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

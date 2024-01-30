@@ -6,23 +6,16 @@ import in.house.financial.interfaces.JwtService;
 import in.house.financial.interfaces.UserInterface;
 import in.house.financial.repository.UserAccessKeyRepository;
 import in.house.financial.repository.UserRepository;
+import in.house.financial.securityconfig.UserSession;
 import in.house.financial.securityconfig.securityDTO.SecurityDTO;
 import in.house.financial.securityconfig.securityDTO.SignUpRequest;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.beans.Transient;
-import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -34,6 +27,7 @@ public class UserServicesImpl implements UserInterface {
     private final UserAccessKeyRepository userAccessKeyRepo;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final UserSession userSession;
 
 
 
@@ -79,9 +73,11 @@ public class UserServicesImpl implements UserInterface {
         try {
 
             Optional<User> userData = userRepository.findByEmail(user.getEmail());
-            if (!userData.isPresent()) {
+            if (userData.isEmpty()) {
                 reponse = new ResponseEntity<>("User Doesn't Exists", HttpStatus.OK);
             } else {
+                UserDetails userDetail = userSession.getUser();
+                String createdBy = userDetail.getUsername();
                 User existingUser = userData.get();
                 existingUser.updateUser(user);
                 userRepository.save(existingUser);
@@ -98,7 +94,7 @@ public class UserServicesImpl implements UserInterface {
         ResponseEntity<String> reponse ;
         try {
             Optional<User> existingUser = userRepository.findById(cuid);
-            if (!existingUser.isPresent()) {
+            if (existingUser.isEmpty()) {
                 reponse = new ResponseEntity<>("User Doesn't Exists", HttpStatus.OK);
             } else {
                 User user = existingUser.get();
@@ -116,7 +112,7 @@ public class UserServicesImpl implements UserInterface {
         ResponseEntity<String> reponse ;
         try {
             Optional<User> existingUser = userRepository.findById(cuid);
-            if (!existingUser.isPresent()) {
+            if (existingUser.isEmpty()) {
                 reponse = new ResponseEntity<>("User Doesn't Exists", HttpStatus.OK);
             } else {
                 User user = existingUser.get();
