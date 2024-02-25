@@ -49,6 +49,10 @@ public class User implements UserDetails {
     @JsonIgnore
     @UpdateTimestamp
     private Date updatedTime;
+    @Column
+    private String createdBy;
+    @Column
+    private String updatedBy;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -84,7 +88,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return !this.getStatus().equalsIgnoreCase("DEAD");
     }
 
     public void updateUser(User updateUser){

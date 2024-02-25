@@ -48,6 +48,8 @@ public class UserServicesImpl implements UserInterface {
                         .email(request.getEmail())
                         .status("active")
                         .userAccessKey(userAccessKey)
+                        .createdBy("admin")
+                        .updatedBy("admin")
                         .build();
                 // Save User along with UserAccessKey
                 userRepository.save(user);
@@ -61,7 +63,7 @@ public class UserServicesImpl implements UserInterface {
                 response = new ResponseEntity<>("User Already Exists", HttpStatus.OK);
             }
         } catch (Exception e) {
-            log.info("Exception occurred in creating user (USER MAY BE DEAD) {}", e.getMessage());
+            log.error("Exception occurred in creating user (USER MAY BE DEAD) {}", e.getMessage());
             response = new ResponseEntity<>("Exception occurred in creating user (USER MAY BE DEAD)", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return response;
@@ -76,15 +78,14 @@ public class UserServicesImpl implements UserInterface {
             if (userData.isEmpty()) {
                 reponse = new ResponseEntity<>("User Doesn't Exists", HttpStatus.OK);
             } else {
-                UserDetails userDetail = userSession.getUser();
-                String createdBy = userDetail.getUsername();
                 User existingUser = userData.get();
                 existingUser.updateUser(user);
+                existingUser.setUpdatedBy(userSession.getUser().getUsername());
                 userRepository.save(existingUser);
                 reponse = new ResponseEntity<>("updated successfully", HttpStatus.CREATED);
             }
         }catch (Exception e){
-            log.info("Exception occurred in updating user (USER MAY BE DEAD) {}",e.getMessage());
+            log.error("Exception occurred in updating user (USER MAY BE DEAD) {}",e.getMessage());
             reponse = new ResponseEntity<>("Exception occurred in updating user (USER MAY BE DEAD)", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return reponse;
@@ -102,7 +103,7 @@ public class UserServicesImpl implements UserInterface {
                 reponse = new ResponseEntity<>("deleted successfully", HttpStatus.CREATED);
             }
         }catch (Exception e){
-            log.info("Exception occurred in deleting user (USER MAY BE DEAD) {}",e.getMessage());
+            log.error("Exception occurred in deleting user (USER MAY BE DEAD) {}",e.getMessage());
             reponse = new ResponseEntity<>("Exception occurred in deleting user (USER MAY BE DEAD)", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return reponse;
@@ -117,11 +118,12 @@ public class UserServicesImpl implements UserInterface {
             } else {
                 User user = existingUser.get();
                 user.setStatus("DEAD");
+                user.setUpdatedBy(userSession.getUser().getUsername());
                 userRepository.save(user);
                 reponse = new ResponseEntity<>("deactivated successfully", HttpStatus.CREATED);
             }
         }catch (Exception e){
-            log.info("Exception occurred in deactivating user (USER MAY BE DEAD) {}",e.getMessage());
+            log.error("Exception occurred in deactivating user (USER MAY BE DEAD) {}",e.getMessage());
             reponse = new ResponseEntity<>("Exception occurred in deactivating user (USER MAY BE DEAD)", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return reponse;
