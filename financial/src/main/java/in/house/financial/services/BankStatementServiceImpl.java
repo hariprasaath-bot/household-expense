@@ -2,55 +2,56 @@ package in.house.financial.services;
 
 import com.spire.pdf.PdfDocument;
 import in.house.financial.interfaces.BankStatementService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.stereotype.Service;
-import org.springframework.stereotype.Service;
-import technology.tabula.ObjectExtractor;
-import technology.tabula.Page;
-import technology.tabula.RectangularTextContainer;
-import technology.tabula.Table;
-import technology.tabula.extractors.BasicExtractionAlgorithm;
+import technology.tabula.*;
 import technology.tabula.extractors.SpreadsheetExtractionAlgorithm;
 
-import com.spire.pdf.PdfDocument;
 import com.spire.pdf.utilities.PdfTable;
 import com.spire.pdf.utilities.PdfTableExtractor;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
+@Slf4j
 public class BankStatementServiceImpl implements BankStatementService {
 
        @Override
         public String readStatementFile(String path) throws IOException {
-           path = "D:/table.pdf";
-            // Validate path
            test(path);
             File pdfFile = new File(path);
             if (!pdfFile.exists()) {
                 throw new IllegalArgumentException("PDF file not found at path: " + path);
             }
-           PDDocument pdf = PDDocument.load(pdfFile);
+           PDDocument pdf = PDDocument.load(pdfFile,"hari0904");
             // Use a try-with-resources block for proper resource handling
            ObjectExtractor oe = new ObjectExtractor(pdf);
            SpreadsheetExtractionAlgorithm sea = new SpreadsheetExtractionAlgorithm();
-           Page page = oe.extract(1);
+               PageIterator pages = oe.extract();
+           while(pages.hasNext()) {
+               // extract text from the table after detecting
+               List<Table> table = sea.extract(pages.next());
+               for (Table tables : table) {
+                   List<List<RectangularTextContainer>> rows = tables.getRows();
 
-           // extract text from the table after detecting
-           List<Table> table = sea.extract(page);
-           for(Table tables: table) {
-               List<List<RectangularTextContainer>> rows = tables.getRows();
+                   for (int i = 0; i < rows.size(); i++) {
 
-               for(int i=0; i<rows.size(); i++) {
-
-                   List<RectangularTextContainer> cells = rows.get(i);
-
-                   for(int j=0; j<cells.size(); j++) {
-                       System.out.print(cells.get(j).getText()+"|");
+                       List<RectangularTextContainer> cells = rows.get(i);
+                       int read = 0;
+                       for (int j = 0; j < cells.size(); j++) {
+                           if (cells.get(j).getText().contains("Statement of Transactions in Savings")) {
+                               read = 1;
+                           }
+                           log.info("| {} |",cells.get(j).getText());
+                           if (read == 1) {
+                               System.out.print(cells.get(j).getText() + "|");
+                           }
+                       }
                    }
                }
            }
@@ -61,7 +62,7 @@ public class BankStatementServiceImpl implements BankStatementService {
        public void test(String path) throws IOException {
 
            //Load a sample PDF document
-           PdfDocument pdf = new PdfDocument(path);
+           PdfDocument pdf = new PdfDocument(path,"hari0904");
 
            //Create a StringBuilder instance
            StringBuilder builder = new StringBuilder();
@@ -83,17 +84,81 @@ public class BankStatementServiceImpl implements BankStatementService {
                            for (int j = 0; j < table.getColumnCount(); j++) {
                                //Extract data from the current table cell and append to the StringBuilder
                                String text = table.getText(i, j);
-                               builder.append(text + " | ");
+                                   builder.append(text + "|");
                            }
-                           builder.append("\r\n");
+                           builder.append("+");
                        }
                    }
                }
            }
 
+           // Parsing logic for CUB BANK Transaction statement from PDF Hard coded.
+           String parsedData = builder.toString();
+
+           String[] rows = parsedData.split("\\+");
+
+           List<String> requiredFields = new ArrayList<>();
+           List<Map<String,String>> data  = new ArrayList<>();
+           AtomicReference<Boolean>  start = new AtomicReference<>(false);
+           AtomicReference<Boolean> end = new AtomicReference<>(false);
+           Arrays.stream(rows).forEach(r-> {
+               String[] fields = r.split("\\|");
+               int Totalcount = 5;
+               int startCount = 0;
+               Map<String, String> transactionData = new LinkedHashMap<>();
+               if (!r.contains("BALANCE BROUGHT FORWARD")) {
+                   for (String f : fields) {
+                        if(fields.length == 9 || f.contains("Transaction Date") || f.contains("Total")) {
+                            if (f.contains("Transaction Date")) {
+                                start.set(true);
+                                end.set(false);
+                            }
+                            if (f.contains("Total")) {
+                                start.set(false);
+                                end.set(true);
+                            }
+                            if (start.get() && !end.get()) {
+                                f = f.strip();
+                                f = f.replaceAll("\r\n", "");
+                                if (startCount == 0) {
+                                    transactionData.put("Transaction Data", f);
+                                } else if (startCount == 2) {
+                                    transactionData.put("details", f);
+                                } else if (startCount == 4) {
+                                    transactionData.put("debit", f);
+                                } else if (startCount == 5) {
+                                    transactionData.put("credit", f);
+                                } else if (startCount == 8) {
+                                    transactionData.put("balance", f);
+                                }
+
+                                startCount += 1;
+                                if (!f.isEmpty()) {
+                                    requiredFields.add(f);
+                                }
+                            }
+                        }
+                   }
+                   if(!transactionData.isEmpty()) {
+                       data.add(transactionData);
+                   }
+               }
+           });
+
            //Write data into a .txt document
            FileWriter fw = new FileWriter("ExtractTable.txt");
-           fw.write(builder.toString());
+           for (Map<String, String> rowData : data) {
+               StringBuilder h = new StringBuilder();
+               for (Map.Entry<String, String> entry : rowData.entrySet()) {
+                   h.append(entry.getKey())
+                           .append("::::[")
+                           .append(entry.getValue())
+                           .append("]::::"); // Or any desired delimiter
+               }
+               h.append("\n");
+               h.deleteCharAt(h.length() - 1); // Remove trailing comma
+               fw.write(h.toString() + "\n"); // Add newline after each row
+           }
            fw.flush();
            fw.close();
        }
