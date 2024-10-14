@@ -1,0 +1,22 @@
+:host {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Ensure it stays on top */
+}
+
+.progress-bar {
+    height: 4px; /* Height of the progress bar */
+    background-color: #4caf50; /* Color of the progress */
+    transition: width 0.2s ease; /* Smooth transition */
+}
+
+.progress-bar span {
+    color: white; /* Text color */
+    font-size: 12px; /* Font size */
+    position: absolute;
+    right: 10px; /* Positioning of text */
+    top: -20px; /* Position above the bar */
+}

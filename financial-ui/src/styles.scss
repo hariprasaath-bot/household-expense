@@ -1,0 +1,21 @@
+/* You can add global styles to this file, and also import other style files */
+body{
+    margin: 0px;
+}
+
+.boiling-effect{
+    --boiling-color: black;
+    transition: all 2.3s ease; /* Smooth transition for text color */      
+    &:hover {
+        --boiling-color: chocolate;
+        color: var(--boiling-color);
+        filter:brightness(1);                                                                                       
+    }
+}
+
+.boiled{
+    --boiling-color: chocolate;
+    transition: all 3.3s ease; /* Smooth transition for text color */
+    color: var(--boiling-color);
+    filter:brightness(1);
+}

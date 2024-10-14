@@ -1,0 +1,32 @@
+:host {
+    display: block;
+    position: relative;
+    cursor: none; /* Hide the default cursor */
+  }
+  
+  .flashlight-overlay {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: fixed; /* Fixed position to cover the entire viewport */
+    pointer-events: none; /* Ignore pointer events */
+    background: radial-gradient(
+      circle 1vmax at var(--cursorX) var(--cursorY),
+      rgba(255, 223, 186, 0.9) 0%, /* Light yellow/cream */
+      rgba(255, 165, 0, 0.7) 40%, /* Bright orange */
+      rgba(255, 99, 71, 0.5) 70%, /* Tomato red */
+      rgba(255, 69, 0, 0.3) 90%, /* Red-Orange */
+      rgb(0, 0, 0) 100% /* Dark background */
+    );
+  }
+  
+  .torch {
+    position: fixed; /* Fix position to follow cursor */
+    width: 100px; /* Set torch width */
+    height: auto; /* Maintain aspect ratio */
+    transform: translate(-50%, -50%); /* Center the torch behind the pointer */
+    pointer-events: none; /* Ignore pointer events for the torch image */
+    z-index: 10; /* Ensure the torch is above other elements */
+  }
+  

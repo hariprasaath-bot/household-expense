@@ -1,0 +1,16 @@
+<a pRipple href="{{googleSignUpUri}}"  class="button-container" type="button">
+    <fa-icon [icon]="google" class="red-icon" size="2xl"></fa-icon>
+</a>
+
+<label class="custom-field three">
+    <input pRipple 
+      type="password" 
+      placeholder="&nbsp;"
+      [ngClass]="{'active-border': isBorderActive}" 
+    />
+    <span class="placeholder">Enter Password</span>
+    <span class="border"></span>
+  </label>
+  
+  <button (click)="isBorderActive = !isBorderActive">Toggle Border Effect</button>
+  
