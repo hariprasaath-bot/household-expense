@@ -4,6 +4,7 @@ import in.house.financial.RequestDTO.ExpenseForm;
 
 public interface ExpenseService {
 
-    public void addExpense(ExpenseForm expenseForm);
-    public void modifyExpense(ExpenseForm expenseForm);
+    void addExpense(ExpenseForm expenseForm);
+
+    void modifyExpense(ExpenseForm expenseForm);
 }

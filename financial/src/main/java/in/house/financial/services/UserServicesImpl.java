@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 
 @Slf4j
@@ -30,8 +31,7 @@ public class UserServicesImpl implements UserInterface {
     private final UserSession userSession;
 
 
-
-    public ResponseEntity<Object> createUser(SignUpRequest request){
+    public ResponseEntity<Object> createUser(SignUpRequest request) {
         ResponseEntity<Object> response;
         try {
             Optional<User> userData = userRepository.findByEmail(request.getEmail());
@@ -70,8 +70,8 @@ public class UserServicesImpl implements UserInterface {
     }
 
 
-    public ResponseEntity<String> updateUser(User user){
-        ResponseEntity<String> reponse ;
+    public ResponseEntity<String> updateUser(User user) {
+        ResponseEntity<String> reponse;
         try {
 
             Optional<User> userData = userRepository.findByEmail(user.getEmail());
@@ -84,15 +84,15 @@ public class UserServicesImpl implements UserInterface {
                 userRepository.save(existingUser);
                 reponse = new ResponseEntity<>("updated successfully", HttpStatus.CREATED);
             }
-        }catch (Exception e){
-            log.error("Exception occurred in updating user (USER MAY BE DEAD) {}",e.getMessage());
+        } catch (Exception e) {
+            log.error("Exception occurred in updating user (USER MAY BE DEAD) {}", e.getMessage());
             reponse = new ResponseEntity<>("Exception occurred in updating user (USER MAY BE DEAD)", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return reponse;
     }
 
-    public ResponseEntity<String> deleteUser(Integer cuid){
-        ResponseEntity<String> reponse ;
+    public ResponseEntity<String> deleteUser(Integer cuid) {
+        ResponseEntity<String> reponse;
         try {
             Optional<User> existingUser = userRepository.findById(cuid);
             if (existingUser.isEmpty()) {
@@ -102,15 +102,15 @@ public class UserServicesImpl implements UserInterface {
                 userRepository.deleteById(user.getId());
                 reponse = new ResponseEntity<>("deleted successfully", HttpStatus.CREATED);
             }
-        }catch (Exception e){
-            log.error("Exception occurred in deleting user (USER MAY BE DEAD) {}",e.getMessage());
+        } catch (Exception e) {
+            log.error("Exception occurred in deleting user (USER MAY BE DEAD) {}", e.getMessage());
             reponse = new ResponseEntity<>("Exception occurred in deleting user (USER MAY BE DEAD)", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return reponse;
     }
 
-    public ResponseEntity<String> deactivateUser(Integer cuid){
-        ResponseEntity<String> reponse ;
+    public ResponseEntity<String> deactivateUser(Integer cuid) {
+        ResponseEntity<String> reponse;
         try {
             Optional<User> existingUser = userRepository.findById(cuid);
             if (existingUser.isEmpty()) {
@@ -122,8 +122,8 @@ public class UserServicesImpl implements UserInterface {
                 userRepository.save(user);
                 reponse = new ResponseEntity<>("deactivated successfully", HttpStatus.CREATED);
             }
-        }catch (Exception e){
-            log.error("Exception occurred in deactivating user (USER MAY BE DEAD) {}",e.getMessage());
+        } catch (Exception e) {
+            log.error("Exception occurred in deactivating user (USER MAY BE DEAD) {}", e.getMessage());
             reponse = new ResponseEntity<>("Exception occurred in deactivating user (USER MAY BE DEAD)", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return reponse;

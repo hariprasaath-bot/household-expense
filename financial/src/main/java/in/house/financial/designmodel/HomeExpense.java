@@ -22,6 +22,7 @@ public class HomeExpense implements ExpenseService {
 
     @Autowired
     UserRepository userRepo;
+
     @Override
     public void addExpense(ExpenseForm expenseForm) {
         HouseholdAccountsTable houseExpense = setHouseholdAccount(expenseForm);
@@ -33,7 +34,7 @@ public class HomeExpense implements ExpenseService {
 
     }
 
-    public HouseholdAccountsTable setHouseholdAccount(ExpenseForm expenseForm){
+    public HouseholdAccountsTable setHouseholdAccount(ExpenseForm expenseForm) {
         HouseholdAccountsTable householdAccountsTable = new HouseholdAccountsTable();
         householdAccountsTable.setAcceptedStatus(expenseForm.getAcceptedStatus());
         householdAccountsTable.setTransactionType(expenseForm.getTransactionType());
@@ -52,6 +53,6 @@ public class HomeExpense implements ExpenseService {
         householdAccountsTable.setHouseholdAccountsSplits(splits);
         Optional<User> user = userRepo.findById(expenseForm.getUserId());
         householdAccountsTable.setUser(user.get());
-        return  householdAccountsTable;
+        return householdAccountsTable;
     }
 }

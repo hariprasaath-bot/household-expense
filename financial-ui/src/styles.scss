@@ -2,6 +2,10 @@
 body{
     margin: 0px;
 }
+@font-face {
+    font-family: bloody;
+    src: url(assets/fonts/ghost-smoke-font/GhostSmoke-drOOl.ttf) format("opentype");
+  }
 
 .boiling-effect{
     --boiling-color: black;
@@ -11,6 +15,7 @@ body{
         color: var(--boiling-color);
         filter:brightness(1);                                                                                       
     }
+    // font-family: 'bloody', Courier, monospace;
 }
 
 .boiled{

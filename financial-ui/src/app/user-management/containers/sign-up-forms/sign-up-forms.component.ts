@@ -4,6 +4,7 @@ import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import { RippleModule } from 'primeng/ripple';
 import { PrimeNGConfig } from 'primeng/api'; 
 import { CommonModule } from '@angular/common';
+import { ProgressLightServiceService } from '../../../common/service/progress-light-service.service';
 
 @Component({
   selector: 'app-sign-up-forms',
@@ -21,10 +22,24 @@ export class SignUpFormsComponent {
 
   isBorderActive: boolean = false;
 
-  constructor(private primengConfig: PrimeNGConfig){
+  constructor(private primengConfig: PrimeNGConfig, private progressService: ProgressLightServiceService){
 
   }
+
   ngOnInit() {
     this.primengConfig.ripple = true; 
+    this.doTheFireThing();
+
+  }
+
+  doTheFireThing(){
+    this.progressService.progress$.subscribe(value => {
+      let boiled = value > 0;
+      if(boiled){
+        this.isBorderActive = true
+      }else{
+       this.isBorderActive = false;
+      }
+    });
   }
 }

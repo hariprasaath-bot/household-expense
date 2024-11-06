@@ -4,5 +4,5 @@ import java.io.IOException;
 
 public interface BankStatementService {
 
-    public String readStatementFile(String path) throws IOException;
+    String readStatementFile(String path) throws IOException;
 }

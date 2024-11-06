@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class expenseController {
 
     private final ExpenseImpl expenseImpl;
+
     @PostMapping("/add")
-    public void addExpense(@RequestBody ExpenseForm expense){
+    public void addExpense(@RequestBody ExpenseForm expense) {
         expenseImpl.addExpense(expense);
     }
 }

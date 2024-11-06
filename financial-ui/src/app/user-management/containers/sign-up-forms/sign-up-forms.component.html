@@ -1,16 +1,17 @@
-<a pRipple href="{{googleSignUpUri}}"  class="button-container" type="button">
-    <fa-icon [icon]="google" class="red-icon" size="2xl"></fa-icon>
-</a>
-
-<label class="custom-field three">
-    <input pRipple 
-      type="password" 
-      placeholder="&nbsp;"
-      [ngClass]="{'active-border': isBorderActive}" 
-    />
-    <span class="placeholder">Enter Password</span>
+<section class="form-style">
+  <label class="boiling-effect custom-field three" [ngClass]="{'boiled': isBorderActive}">
+    <input pRipple type="text" placeholder="&nbsp;" [ngClass]="{'active-border': isBorderActive}" />
+    <span class="placeholder">Name of deceased</span>
     <span class="border"></span>
   </label>
-  
-  <button (click)="isBorderActive = !isBorderActive">Toggle Border Effect</button>
-  
+  <label class="custom-field three boiling-effect" [ngClass]="{'boiled': isBorderActive}">
+    <input pRipple type="text" placeholder="&nbsp;" [ngClass]="{'active-border': isBorderActive}" />
+    <span class="placeholder">Mail of deceased</span>
+    <span class="border"></span>
+  </label>
+  <label class="boiling-effect custom-field three" [ngClass]="{'boiled': isBorderActive}">
+    <input pRipple type="password" placeholder="&nbsp;" [ngClass]="{'active-border': isBorderActive}" />
+    <span class="placeholder">Secret of deceased</span>
+    <span class="border"></span>
+    </label>
+</section>
