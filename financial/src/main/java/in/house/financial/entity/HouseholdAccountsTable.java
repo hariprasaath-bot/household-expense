@@ -1,48 +1,49 @@
 package in.house.financial.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
 import java.util.List;
 
-@Entity
-@Table(name = "household_accounts_table")
+
+@Document(collection = "household_accounts_table")
 @Data
 public class HouseholdAccountsTable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @OneToOne
-    @JoinColumn(name = "inmates_id")
+    @DBRef
     private User user;
 
-    @Column(name = "transaction_type")
+   @Field(name = "transaction_type")
     private String transactionType;
 
-    @Column(name = "amount_value")
+   @Field(name = "amount_value")
     private Double amountValue;
 
-    @Column(name = "accepted_status")
+   @Field(name = "accepted_status")
     private String acceptedStatus;
 
-    @Column(name = "created_date")
+   @Field(name = "created_date")
     @JsonIgnore
-    @CreationTimestamp
+    @CreatedDate
     private Date createdDate;
 
-    @Column(name = "modified_date")
+    @Field(name = "modified_date")
     @JsonIgnore
-    @UpdateTimestamp
+    @LastModifiedDate
     private Date modifiedDate;
 
-    @OneToMany
-    @JoinColumn(name="household_accounts_split_id")
+    @DBRef
     private List<HouseholdAccountsSplit> householdAccountsSplits;
+
 
 }

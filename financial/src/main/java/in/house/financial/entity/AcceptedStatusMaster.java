@@ -1,20 +1,20 @@
 package in.house.financial.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Data;
 
-@Entity
+import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+
 @Data
-@Table(name = "accepted_status_master")
+@Document(collection = "accepted_status_master")
 public class AcceptedStatusMaster {
 
     @Id
-    private Long id;
+    private String id;
 
-    @Column(name = "accepted_status_master_name")
+   @Field(name = "accepted_status_master_name")
     private String acceptedStatusMasterName;
 
 }

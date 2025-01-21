@@ -1,0 +1,57 @@
+.transactions {
+    background-color: #252529;
+
+    .transactions-title {
+        padding: 9px;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+
+        .title-holder {
+            color: chocolate;
+            background-color: black;
+            padding: 2px;
+            border: 0px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+
+            .title-text {
+                font-size: 24px;
+                font-weight: 400;
+                padding: 16px;
+                margin: 0;
+                cursor: pointer;
+            }
+
+            .menu {
+                display: inline-flex;
+                justify-content: space-evenly;
+                align-items: center;
+
+                .menu-text {
+                    font-size: 16px;
+                    padding-left: 10px;
+                    cursor: pointer;
+
+                    &:hover {
+                        color: ivory;
+                        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+                    }
+                }
+            }
+        }
+    }
+}
+
+:host ::ng-deep .card-container {
+    .card {
+        &.styled-box-orange {
+            .p-ink {
+                background: rgba(var(--boiling-color), 0.7);
+            }
+        }
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}

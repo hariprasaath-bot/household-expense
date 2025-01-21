@@ -1,10 +1,17 @@
 package in.house.financial.services;
 
 import com.spire.pdf.PdfDocument;
+import in.house.financial.configs.MongoConnector;
 import in.house.financial.interfaces.BankStatementService;
+import in.house.financial.utils.StatementParsingUtil;
+import in.house.financial.utils.StatementRecordEnrich;
+import in.house.financial.utils.TransactionRecord;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import technology.tabula.*;
 import technology.tabula.extractors.SpreadsheetExtractionAlgorithm;
 
@@ -19,10 +26,17 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class BankStatementServiceImpl implements BankStatementService {
 
+     private final ApplicationContext context;
+
+     private  final StatementRecordEnrich statementRecordEnrich;
+
+     private final MongoConnector mongoConnector;
+
        @Override
-        public String readStatementFile(String path) throws IOException {
+     public String readStatementFile(String path) throws IOException {
            test(path);
             File pdfFile = new File(path);
             if (!pdfFile.exists()) {
@@ -162,6 +176,23 @@ public class BankStatementServiceImpl implements BankStatementService {
            fw.flush();
            fw.close();
        }
+
+     public Object parseUploadedStatementFile(String bank, MultipartFile uploadedStatementFile) throws IOException{
+           StatementParsingUtil statementParsingUtil = getStatementParser(bank);
+           List<TransactionRecord> parsedStatement = statementParsingUtil.parseBankStatement(uploadedStatementFile);
+           return  mongoConnector.putDataInMongo(statementRecordEnrich.enrich(parsedStatement), "transaction_records" );
+     }
+
+     /// Transactions --> MONGO
+     /// FILTER BY TIME
+     /// Group BY Category and TIME
+     ///
+
+     private StatementParsingUtil getStatementParser(String bank){
+           return (StatementParsingUtil) context.getBean(bank);
+     }
+
+
 
 }
 

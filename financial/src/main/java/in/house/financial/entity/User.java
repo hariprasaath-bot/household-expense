@@ -1,10 +1,13 @@
 package in.house.financial.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,45 +16,38 @@ import java.util.Date;
 import java.util.Objects;
 
 @Data
-@Entity
+@Document(collection = "inmates")
 @Builder
-@Table(name="inmates")
 @RequiredArgsConstructor
 @AllArgsConstructor
 @NoArgsConstructor
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    @Column
+    private String id;
+    
     private String name;
-    @Column
+    
     @NonNull
     private String email;
-    @Column
+    
     private String status;
 
-
-    @ManyToOne
-    @JoinColumn(name = "user_role_id")
+    @DBRef
     private UserRoles userRole;
-
-    @OneToOne
-    @JoinColumn(name="user_access_key_mapping_id",referencedColumnName = "id")
+   
+    @DBRef
     private UserAccessKey userAccessKey;
 
-    @Column
     @JsonIgnore
-    @CreationTimestamp
+    @CreatedDate
     private Date createdTime;
 
-    @Column
     @JsonIgnore
-    @UpdateTimestamp
+    @LastModifiedDate
     private Date updatedTime;
-    @Column
+    
     private String createdBy;
-    @Column
+    
     private String updatedBy;
 
     @Override

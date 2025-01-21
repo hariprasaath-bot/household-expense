@@ -33,10 +33,11 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request -> request.requestMatchers("/auth/signin").permitAll()
+                .authorizeHttpRequests(request -> request.requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/user/**").authenticated()
                                 .requestMatchers("/expense/**").authenticated()
                                 .requestMatchers("/statement").authenticated()
+                                .requestMatchers("/bank/**").permitAll()
                         )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(

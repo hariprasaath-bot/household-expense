@@ -1,44 +1,43 @@
 package in.house.financial.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import jakarta.persistence.Table;
+
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
 import java.util.List;
 
 @Data
-@Entity
-@Table(name = "personel_accounts_table")
+@Document(collection = "personel_accounts_table")
 public class PersonelAccountsTable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @Column(name = "user_id")
+    private String id;
+
+   @Field(name = "user_id")
     private Long userId;
 
-    @Column(name = "transaction_type")
+   @Field(name = "transaction_type")
     private String transactionType;
 
-    @Column(name = "amount_value")
+   @Field(name = "amount_value")
     private Double amountValue;
 
-    @Column(name = "created_date")
+   @Field(name = "created_date")
     @JsonIgnore
-    @CreationTimestamp
+    @CreatedDate
     private Date createdDate;
 
-    @Column(name = "modified_date")
+   @Field(name = "modified_date")
     @JsonIgnore
-    @UpdateTimestamp
+    @LastModifiedDate
     private Date modifiedDate;
-
-    @OneToMany(mappedBy = "personelAccountsTable")
-    private List<PersonelAccountsSplit> personelAccountsSplits;
 
 }

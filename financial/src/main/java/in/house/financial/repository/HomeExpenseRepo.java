@@ -1,8 +1,8 @@
 package in.house.financial.repository;
 
 import in.house.financial.entity.HouseholdAccountsTable;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface HomeExpenseRepo extends JpaRepository<HouseholdAccountsTable, Integer> {
+public interface HomeExpenseRepo extends MongoRepository<HouseholdAccountsTable, String> {
 
 }

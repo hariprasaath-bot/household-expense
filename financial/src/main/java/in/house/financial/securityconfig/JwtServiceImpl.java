@@ -19,6 +19,13 @@ import java.util.function.Function;
 public class JwtServiceImpl implements JwtService {
     @Value("${token.signing.key}")
     private String jwtSigningKey;
+
+    @Value("${access.token.expires.in:900}") // 15 minutes in seconds
+    private Long accessTokenDurationSeconds;
+
+    @Value("${refresh.token.expires.in:604800}") // 7 days in seconds
+    private Long refreshTokenDurationSeconds;
+
     @Override
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -30,10 +37,52 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
+    public String generateAccessToken(UserDetails userDetails) {
+        return generateToken(new HashMap<>(), userDetails, accessTokenDurationSeconds, "ACCESS");
+    }
+
+    @Override
+    public String generateRefreshToken(UserDetails userDetails) {
+        return generateToken(new HashMap<>(), userDetails, refreshTokenDurationSeconds, "REFRESH");
+    }
+
+    private String generateToken(Map<String, Object> extraClaims,
+                                 UserDetails userDetails,
+                                 Long durationInSeconds,
+                                 String tokenType) {
+        extraClaims.put("tokenType", tokenType);
+
+        return Jwts.builder()
+                .claims(extraClaims)
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + durationInSeconds * 1000))
+                .signWith(getSigningKey())
+                .compact();
+    }
+
+    @Override
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String userName = extractUserName(token);
-        return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        return (userName.equals(userDetails.getUsername())) &&
+                !isTokenExpired(token) &&
+                isCorrectTokenType(token, "ACCESS");
     }
+
+    @Override
+    public boolean isRefreshTokenValid(String token, UserDetails userDetails) {
+        final String userName = extractUserName(token);
+        return (userName.equals(userDetails.getUsername())) &&
+                !isTokenExpired(token) &&
+                isCorrectTokenType(token, "REFRESH");
+    }
+
+    private boolean isCorrectTokenType(String token, String expectedType) {
+        final String tokenType = extractClaim(token, claims ->
+                claims.get("tokenType", String.class));
+        return expectedType.equals(tokenType);
+    }
+
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolvers) {
         final Claims claims = extractAllClaims(token);

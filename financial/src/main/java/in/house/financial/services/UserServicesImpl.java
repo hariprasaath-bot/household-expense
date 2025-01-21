@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +43,7 @@ public class UserServicesImpl implements UserInterface {
                 userAccessKey = userAccessKeyRepo.save(userAccessKey);
                 // Create User and associate UserAccessKey
                 var user = User.builder()
-                        .name(request.getFirstName() + " " + request.getLastName())
+                        .name(request.getName())
                         .email(request.getEmail())
                         .status("active")
                         .userAccessKey(userAccessKey)
@@ -58,7 +57,7 @@ public class UserServicesImpl implements UserInterface {
                 var jwt = jwtService.generateToken(user);
                 SecurityDTO token = SecurityDTO.builder().token(jwt).build();
 
-                response = ResponseEntity.ok().body(token);
+                response = ResponseEntity.ok(token);
             } else {
                 response = new ResponseEntity<>("User Already Exists", HttpStatus.OK);
             }
@@ -91,7 +90,7 @@ public class UserServicesImpl implements UserInterface {
         return reponse;
     }
 
-    public ResponseEntity<String> deleteUser(Integer cuid) {
+    public ResponseEntity<String> deleteUser(String cuid) {
         ResponseEntity<String> reponse;
         try {
             Optional<User> existingUser = userRepository.findById(cuid);
@@ -109,7 +108,7 @@ public class UserServicesImpl implements UserInterface {
         return reponse;
     }
 
-    public ResponseEntity<String> deactivateUser(Integer cuid) {
+    public ResponseEntity<String> deactivateUser(String cuid) {
         ResponseEntity<String> reponse;
         try {
             Optional<User> existingUser = userRepository.findById(cuid);

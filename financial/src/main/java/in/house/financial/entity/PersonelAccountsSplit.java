@@ -1,31 +1,32 @@
 package in.house.financial.entity;
 
-import jakarta.persistence.*;
-import jakarta.persistence.Table;
+
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
 
-@Entity
+
 @Data
-@Table(name = "personel_accounts_split")
+@Document(collection = "personel_accounts_split")
 public class PersonelAccountsSplit {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @ManyToOne
-    @JoinColumn(name = "personel_accounts_table_id")
+    @DBRef
     private PersonelAccountsTable personelAccountsTable;
 
-    @Column(name = "user_id")
+   @Field(name = "user_id")
     private Long userId;
 
-    @Column(name = "transaction_type")
+   @Field(name = "transaction_type")
     private String transactionType;
 
-    @Column(name = "amount_value")
+   @Field(name = "amount_value")
     private Double amountValue;
 
 

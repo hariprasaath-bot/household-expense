@@ -1,20 +1,16 @@
 package in.house.financial.entity;
 
-import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name="user_access_key_mapping")
 @Data
 @Builder
+@Document(collection = "user_access_keys") // Specify the MongoDB collection name
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserAccessKey {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @Column(name="access_key")
+    private String id; // Use String for MongoDB's ObjectId
     private String accessKey;
 }
-

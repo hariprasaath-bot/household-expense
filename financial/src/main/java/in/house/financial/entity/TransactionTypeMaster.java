@@ -1,20 +1,19 @@
 package in.house.financial.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Data;
 
-@Entity
+import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+@Document(collection = "transaction_type_master")
 @Data
-@Table(name = "transaction_type_master")
 public class TransactionTypeMaster {
 
     @Id
-    private Long id;
+    private String id;
 
-    @Column(name = "transaction_type_name")
+   @Field(name = "transaction_type_name")
     private String transactionTypeName;
 
     // Getters and setters
