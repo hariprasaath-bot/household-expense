@@ -50,6 +50,10 @@ export class AuthService {
           this.authState.set(response);
           localStorage.setItem('auth', JSON.stringify(response));
           this.startRefreshTokenTimer();
+  
+          // Redirect to the intended route or default route after login
+          const returnUrl = this.router.parseUrl(this.router.url).queryParams['returnUrl'] || '/home';
+          this.router.navigateByUrl(returnUrl);
         }),
         catchError(error => throwError(() => error))
       );

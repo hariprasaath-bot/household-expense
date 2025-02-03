@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import { RippleModule } from 'primeng/ripple';
-import { PrimeNGConfig } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { ProgressLightServiceService } from '../../../common/service/progress-light-service.service';
 import { ReactiveFormsModule } from '@angular/forms'; // Import ReactiveFormsModule
@@ -26,12 +25,12 @@ export class SignUpFormsComponent implements OnInit {
 
   isBorderActive: boolean = false;
 
-  newUserForm!: FormGroup; // Use definite assignment assertion
+  newUserForm!: FormGroup; 
+  signInForm !: FormGroup
 
-  constructor(private primengConfig: PrimeNGConfig, private UserMangementService: UserMangementService, private authSerive: AuthService, private progressService: ProgressLightServiceService, private fb: FormBuilder) { }
+  constructor( private UserMangementService: UserMangementService, private authSerive: AuthService, private progressService: ProgressLightServiceService, private fb: FormBuilder) { }
 
   ngOnInit() {
-    this.primengConfig.ripple = true;
     this.doTheFireThing();
     this.initForm(); // Initialize the form in ngOnInit
   }
@@ -39,6 +38,10 @@ export class SignUpFormsComponent implements OnInit {
   initForm() {
     this.newUserForm = this.fb.group({
       deceasedName: ['', Validators.required],
+      deceasedEmail: ['', [Validators.required, Validators.email]],
+      deceasedSecret: ['', [Validators.required, Validators.minLength(6)]]
+    }); // Add custom validator
+    this.signInForm = this.fb.group({
       deceasedEmail: ['', [Validators.required, Validators.email]],
       deceasedSecret: ['', [Validators.required, Validators.minLength(6)]]
     }); // Add custom validator
@@ -53,7 +56,7 @@ export class SignUpFormsComponent implements OnInit {
 
   createTheUser() {
     if (this.newUserForm.valid) {
-      let userDetails = this.formPayload(this.newUserForm.value); // Process the form data
+      let userDetails = this.formnewUserPayload(this.newUserForm.value); // Process the form data
       
       this.UserMangementService.createUser(userDetails).subscribe((resp)=>{
         this.authSerive.login(userDetails.email,userDetails.password).subscribe((resp) =>{
@@ -69,7 +72,18 @@ export class SignUpFormsComponent implements OnInit {
     }
   }
 
-  private formPayload(userDetails: any) {
+  userSignIn(){
+    this.authSerive.login(this.signInForm.value.deceasedEmail,this.signInForm.value.deceasedSecret).subscribe((resp) =>{
+      console.log("login successful")
+    }, 
+  (err)=>{
+    console.log("login failed")
+  });
+  }
+
+
+
+  private formnewUserPayload(userDetails: any) {
     return {
       name: userDetails.deceasedName,
       email: userDetails.deceasedEmail,

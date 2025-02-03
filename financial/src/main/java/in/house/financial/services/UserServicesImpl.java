@@ -55,7 +55,7 @@ public class UserServicesImpl implements UserInterface {
 
                 // Generate token and create SecurityDTO
                 var jwt = jwtService.generateToken(user);
-                SecurityDTO token = SecurityDTO.builder().token(jwt).build();
+                SecurityDTO token = SecurityDTO.builder().userId(user.getName()).email(user.getEmail()).accessToken(jwt).refreshToken(jwtService.generateRefreshToken(user)).build();
 
                 response = ResponseEntity.ok(token);
             } else {

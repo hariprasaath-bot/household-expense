@@ -3,10 +3,11 @@
         <div pRipple class="title-holder">
             <p class="title-text">Transactions</p>
             <div class="menu">
-                <p  class="menu-text">Manipulate</p>
-                <p pRipple class="menu-text">Dashboard</p>
-                <p pRipple class="menu-text">Help</p>
+                <p  (click)="moveToMenu('dashboard')"  class="menu-text">Dashboard</p>
+                <p  (click)="moveToMenu('manipulate')" class="menu-text">Manipulate</p>
+                <p  (click)="moveToMenu('dashboard')" class="menu-text">Help</p>
             </div>
         </div>
     </div>
+    <router-outlet/>
 </section>

@@ -1,16 +1,4 @@
-.button-container {
-  display: flex;
-  padding: 8px;
-  border-radius: 8px;
-  width: 200px;
-  height: 40px;
-  align-items: center;
-  justify-content: center;
-  background-color: black;
-  box-shadow: none;
-  border: 1.2px solid;
-  border-color: var(--boiling-color);
-}
+
 
 .red-icon {
   color: var(--boiling-color);
@@ -30,18 +18,35 @@
   }
 }
 
-.form-container {
+.section-style {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   flex-direction: column;
-  gap: 40px;
+  gap: 60px;
 
-  .form-style {
+  .form-container {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    flex-direction: column;
+    flex-direction: row;
+    gap: 100px;
+    margin-top: 100px;
+
+    .form-style {
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      flex-direction: column;
+    }
+  }
+
+  .submit-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: row;
+    gap: 100px;
   }
 }
 
@@ -61,7 +66,7 @@
 .custom-field input {
   border: none;
   appearance: none;
-  background: transparent;
+  background: transparent !important;
   padding: 14px;
   border-radius: 3px;
   width: 250px;
@@ -170,3 +175,18 @@
     calc(var(--draw-duration) * 3),
     calc(var(--draw-duration) * 2);
 }
+
+
+.button-container {
+  display: flex;
+  padding: 8px;
+  border-radius: 8px;
+  width: 200px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+  box-shadow: none;
+  border: 1.2px solid;
+  border-color: var(--boiling-color);
+} 

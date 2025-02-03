@@ -1,6 +1,5 @@
 package in.house.financial.securityconfig;
 
-import in.house.financial.entity.User;
 import in.house.financial.interfaces.AuthenticationService;
 import in.house.financial.interfaces.JwtService;
 import in.house.financial.interfaces.UserInterface;
@@ -8,7 +7,6 @@ import in.house.financial.repository.UserRepository;
 import in.house.financial.securityconfig.exception.InvalidTokenException;
 import in.house.financial.securityconfig.securityDTO.*;
 import lombok.RequiredArgsConstructor;
-import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,7 +31,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password."));
         var jwt = jwtService.generateToken(user);
-        return SecurityDTO.builder().token(jwt).build();
+        return SecurityDTO.builder().email(user.getEmail()).userId(user.getName()).accessToken(jwt).refreshToken(jwtService.generateRefreshToken(user)).build();
     }
 
     @Override

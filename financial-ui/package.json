@@ -21,8 +21,9 @@
     "@auth0/angular-jwt": "^5.2.0",
     "@fortawesome/angular-fontawesome": "^0.15.0",
     "@fortawesome/free-brands-svg-icons": "^6.6.0",
+    "@primeng/themes": "^19.0.5",
     "jwt-decode": "^4.0.0",
-    "primeng": "^17.18.11",
+    "primeng": "^18.0.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.10"
