@@ -1,0 +1,61 @@
+.upload-styles {
+    transition: all 1.5s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5%;
+
+    .custom-upload-button {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: #d2691e;
+        background: black;
+        border: 0px;
+        font-size: 1rem;
+        border-radius: 20px;
+        box-shadow: -3px 7px 23px -4px rgba(107, 111, 106, 0.425);
+        padding: 25px;
+        transition: all 0.75s ease-in-out;
+        &:hover {
+            box-shadow: -3px 7px 23px -4px rgba(210, 105, 30, 0.63);
+        }
+    }
+
+    .underlying-input{
+            height: 100%;
+            width: 100%;
+            opacity: 0;
+            cursor: pointer;
+    }
+    .progress-style {
+        width: 300px;
+        padding: 0px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        transition: all 1.5s ease-in-out;
+    }
+
+    .custom-progress-bar .p-progressbar {
+        background-color: black;
+        animation: progressBarAnimation 3s ease-in-out;
+    }
+
+    .custom-progress-bar .p-progressbar-value {
+        background-color: chocolate;
+    }
+
+
+    @keyframes progressBarAnimation {
+        0% {
+            width: 0;
+        }
+
+        100% {
+            width: 300px;
+        }
+    }
+
+}

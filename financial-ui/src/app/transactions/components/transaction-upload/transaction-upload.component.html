@@ -1,19 +1,21 @@
-<section>
-    <p-fileUpload
-    name="uploadedFiles[]"
-    (onUpload)="whenUploadFile($event)"
-    [multiple]="true"
-    mode="advanced"
->
-    <ng-template #empty>
-        <div>Drag and drop files to here to upload.</div>
-    </ng-template>
-    <ng-template #content>
-        <ul *ngIf="uploadedFiles.length">
-            <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
-        </ul>
-    </ng-template>
-</p-fileUpload>
+<section class="custom-primeng">
+    <!-- <div class="upload-styles">
+        @if (!showProgressBar) {
+        <p-button outlined="true" [ngStyle]="{'--p-ripple-background': 'rgba(210, 105, 30, 0.43)'}" [raised]="true"
+            (click)="startProgress()">
+            <i class="pi pi-file-arrow-up" style="font-size: 24px;"></i>
+        </p-button>
+        }@else {
+        <p-progressBar *ngIf="showProgressBar" [style.width]="'300px'" [ngStyle]="{'--p-progressbar-value-background': 'chocolate'}" [value]="progressValue"
+            styleClass="custom-progress-bar"></p-progressBar>
+        }
+    </div> -->
+    <div class="upload-styles">
+        <div (click)="startProgress();" pRipple [ngClass]="{'progress-style': showProgressBar}" [ngStyle]="{'--p-ripple-background': 'rgba(210, 105, 30, 0.43)'}" class="custom-upload-button">
+            <i *ngIf="!showProgressBar" class="pi pi-file-arrow-up" style="font-size: 24px;"></i>
+            <input hidden type="file" (change)="onFileSelected($event)"  #uploader />
+            <!-- <input class="underlying-input" title="file selection input" *ngIf="!showProgressBar" type="file" id="fileInput"  /> -->
+        </div>
 
-
+    </div>
 </section>

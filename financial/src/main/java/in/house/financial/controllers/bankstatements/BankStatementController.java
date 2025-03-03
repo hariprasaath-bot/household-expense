@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @Slf4j
@@ -30,11 +32,15 @@ public class BankStatementController {
     }
 
     @PostMapping("/statement/upload")
-    public ResponseEntity<Object> uploadBankStatement(@RequestParam("type") String bank, @RequestParam("file") MultipartFile uploadedStatment){
-        try {
-            return  ResponseEntity.ok(bankStatementService.parseUploadedStatementFile(bank,uploadedStatment));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public ResponseEntity<SseEmitter> uploadBankStatement(@RequestParam("type") String bank, @RequestParam("file") MultipartFile uploadedStatment){
+        SseEmitter emitter = new SseEmitter();
+        CompletableFuture.runAsync(() -> {
+            try {
+                bankStatementService.parseUploadedStatementFile(bank, uploadedStatment, emitter).complete();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        return ResponseEntity.ok(emitter);
     }
 }
