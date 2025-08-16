@@ -24,6 +24,7 @@ export class SignUpFormsComponent implements OnInit {
     this.redirect_uri + "&response_type=code&client_id=" + this.client_id + "&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&access_type=offline";
 
   isBorderActive: boolean = false;
+  isSignInMode: boolean = false;
 
   newUserForm!: FormGroup; 
   signInForm !: FormGroup
@@ -37,16 +38,15 @@ export class SignUpFormsComponent implements OnInit {
 
   initForm() {
     this.newUserForm = this.fb.group({
-      deceasedName: ['', Validators.required],
-      deceasedEmail: ['', [Validators.required, Validators.email]],
-      deceasedSecret: ['', [Validators.required, Validators.minLength(6)]]
-    }); // Add custom validator
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    });
     this.signInForm = this.fb.group({
-      deceasedEmail: ['', [Validators.required, Validators.email]],
-      deceasedSecret: ['', [Validators.required, Validators.minLength(6)]]
-    }); // Add custom validator
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    });
   }
-
 
   doTheFireThing() {
     this.progressService.progress$.subscribe(value => {
@@ -56,10 +56,8 @@ export class SignUpFormsComponent implements OnInit {
 
   createTheUser() {
     if (this.newUserForm.valid) {
-      let userDetails = this.formnewUserPayload(this.newUserForm.value); // Process the form data
-      
-      this.UserMangementService.createUser(userDetails).subscribe((resp)=>{
-        this.authSerive.login(userDetails.email,userDetails.password).subscribe((resp) =>{
+      this.UserMangementService.createUser(this.newUserForm.value).subscribe((resp)=>{
+        this.authSerive.login(this.newUserForm.value.email, this.newUserForm.value.password).subscribe((resp) =>{
           console.log("login successful")
         }, 
       (err)=>{
@@ -67,30 +65,26 @@ export class SignUpFormsComponent implements OnInit {
       });
       })
     } else {
-      // Mark all controls as touched to display validation errors
       this.markFormGroupTouched(this.newUserForm);
     }
   }
 
   userSignIn(){
-    this.authSerive.login(this.signInForm.value.deceasedEmail,this.signInForm.value.deceasedSecret).subscribe((resp) =>{
-      console.log("login successful")
-    }, 
-  (err)=>{
-    console.log("login failed")
-  });
+    if (this.signInForm.valid) {
+      this.authSerive.login(this.signInForm.value.email, this.signInForm.value.password).subscribe((resp) =>{
+        console.log("login successful")
+      }, 
+      (err)=>{
+        console.log("login failed")
+      });
+    } else {
+      this.markFormGroupTouched(this.signInForm);
+    }
   }
 
-
-
-  private formnewUserPayload(userDetails: any) {
-    return {
-      name: userDetails.deceasedName,
-      email: userDetails.deceasedEmail,
-      password: userDetails.deceasedSecret
-    };
+  toggleMode() {
+    this.isSignInMode = !this.isSignInMode;
   }
-  
 
   private markFormGroupTouched(formGroup: FormGroup) {
     formGroup.markAllAsTouched();

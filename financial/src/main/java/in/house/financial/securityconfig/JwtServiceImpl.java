@@ -90,9 +90,11 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        // Add tokenType ACCESS by default for backward compatibility
+        extraClaims.put("tokenType", "ACCESS");
         return Jwts.builder().claims(extraClaims).subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .expiration(new Date(System.currentTimeMillis() + accessTokenDurationSeconds * 1000))
                 .signWith(getSigningKey())
                 .compact();
     }

@@ -5,11 +5,15 @@ import in.house.financial.utils.StatementParsingUtil;
 import in.house.financial.utils.TransactionRecord;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +26,7 @@ public class IciciBankStatementParser implements StatementParsingUtil {
         for (Row row : sheet) {
             for (Cell cell : row) {
                 if (cell.getCellType() == CellType.STRING
-                        && headerName.contains(cell.getStringCellValue().trim())) {
+                        && cell.getStringCellValue().trim().contains(headerName)) {
                     return row.getRowNum(); // Return the row index if header is found
                 }
             }
@@ -36,45 +40,61 @@ public class IciciBankStatementParser implements StatementParsingUtil {
         if (cell == null) {
             return null;
         }
+        if (cell.getCellType().equals(CellType.NUMERIC)) {
+            if (DateUtil.isCellDateFormatted(cell)) {
+                return String.valueOf(cell.getDateCellValue());
+            }
+            return String.valueOf(cell.getNumericCellValue());
+        }
         return cell.getStringCellValue();
 
     }
+
+    /**
+     * Parses the ICICI bank statement from the provided Excel file.
+     *
+     * @param statement The MultipartFile representing the bank statement.
+     * @return A list of TransactionRecord objects representing the transactions in the statement.
+     */
 
     @Override
     public List<TransactionRecord> parseBankStatement(MultipartFile statement) {
         List<TransactionRecord> transactions = new ArrayList<>();
 
         try (InputStream inputStream = statement.getInputStream();
-             Workbook workbook =  WorkbookFactory.create(inputStream)) {
+             Workbook workbook = WorkbookFactory.create(inputStream)) {
 
-            // Assuming the first sheet contains the data
             Sheet sheet = workbook.getSheetAt(0);
-
-            // Find the header row index dynamically
             int headerRowIndex = findHeaderRowIndex(sheet, "Transactions List -");
-            int lastIndex = findHeaderRowIndex(sheet,"Legends Used in Account Statement");
+            int lastIndex = findHeaderRowIndex(sheet, "Legends Used in Account Statement");
 
-            // Process rows after the header
-            for (int i = headerRowIndex + 1 + 1; i < lastIndex; i++) {
+            for (int i = headerRowIndex + 2; i < lastIndex; i++) {
                 Row row = sheet.getRow(i);
-
-                // Skip empty rows
                 if (row == null || row.getCell(0) == null) {
                     continue;
                 }
                 try {
-                    // Read transaction details
                     TransactionRecord transaction = new TransactionRecord();
-                    transaction.setRecordDate(DateConverterUtil.convertToEpoch(getCellValue(row.getCell(2)))); // Column B
-                    transaction.setTransaction_date(DateConverterUtil.convertToEpoch(getCellValue(row.getCell(3)))); // Column C
-                    transaction.setRemark((String) getCellValue(row.getCell(5))); // Column D
-                    transaction.setWithdraw(Double.valueOf((String) getCellValue(row.getCell(6)))); // Column E
-                    transaction.setDeposit(Double.valueOf((String) getCellValue(row.getCell(7)))); // Column F
+                    try{
+                        transaction.setRecordDate(DateConverterUtil.convertToDate(getCellValue(row.getCell(2)))); // Column B
+                    } catch (Exception e) {
+                        log.error("Error parsing record date for row {}: :{} ::: {}", i, row, e.getMessage());
+                        transaction.setRecordDate(transactions.get(transactions.size() - 1 ).getRecordDate()); // Fallback to previous record date
+                    }
+                    try{
+                        transaction.setTransaction_date(DateConverterUtil.convertToDate(getCellValue(row.getCell(3)))); // Column C
+                    } catch (Exception e) {
+                        log.error("Error parsing transaction date for row {}: :{} ::: {}", i, row, e.getMessage());
+                        transaction.setTransaction_date(transactions.get(transactions.size() - 1 ).getTransaction_date()); // Fallback to record date
+                    }transaction.setRemark(getCellValue(row.getCell(5)));// Column D
+                    transaction.setTransactionId(StringUtils.substringAfterLast(getCellValue(row.getCell(5)), "/")); // Column D
+                    transaction.setWithdraw(Double.valueOf(getCellValue(row.getCell(6)))); // Column E
+                    transaction.setDeposit(Double.valueOf(getCellValue(row.getCell(7)))); // Column F
                     transaction.setBalance(getCellValue(row.getCell(8))); // Column G
 
                     transactions.add(transaction);
-                }catch (Exception invalidRecordEx){
-                    log.info("Invalid Record found {}",row.getRowNum());
+                } catch (Exception invalidRecordEx) {
+                    log.info("Invalid Record found {}", row.getRowNum());
                     log.error(invalidRecordEx.getMessage());
                 }
             }

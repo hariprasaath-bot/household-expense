@@ -42,23 +42,29 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public ResponseEntity<?> refreshToken(TokenRefreshRequest request) throws InvalidTokenException {
         String refreshToken = request.getRefreshToken();
 
-        // Extract username from refresh token
-        String username = jwtService.extractUserName(refreshToken);
-        UserDetails userDetails = userDetailsService.userDetailsService().loadUserByUsername(username);
+        try {
+            // Extract username from refresh token
+            String username = jwtService.extractUserName(refreshToken);
+            UserDetails userDetails = userDetailsService.userDetailsService().loadUserByUsername(username);
 
-        // Validate refresh token
-        if (!jwtService.isRefreshTokenValid(refreshToken, userDetails)) {
-            throw new InvalidTokenException("Invalid refresh token");
-        }
+            // Validate refresh token
+            if (!jwtService.isRefreshTokenValid(refreshToken, userDetails)) {
+                throw new InvalidTokenException("Invalid refresh token");
+            }
 
-        // Generate new access token
-        String newAccessToken = jwtService.generateAccessToken(userDetails);
+            // Generate new access token
+            String newAccessToken = jwtService.generateAccessToken(userDetails);
 
-        return ResponseEntity.ok(TokenRefreshResponse.builder()
+            TokenRefreshResponse response = TokenRefreshResponse.builder()
                 .accessToken(newAccessToken)
                 .refreshToken(refreshToken)  // Return same refresh token
                 .tokenType("Bearer")
-                .build());
+                .build();
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            throw new InvalidTokenException("Error processing refresh token: " + e.getMessage());
+        }
     }
 
 }

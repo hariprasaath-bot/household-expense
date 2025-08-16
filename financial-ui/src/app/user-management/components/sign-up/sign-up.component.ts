@@ -5,11 +5,12 @@ import { ProgressLightComponent } from "../../../common/components/progress-ligh
 import { ProgressLightServiceService } from '../../../common/service/progress-light-service.service';
 import { CommonModule } from '@angular/common'
 import { SignUpFormsComponent } from "../../containers/sign-up-forms/sign-up-forms.component";
+import { ToastModule  } from "primeng/toast";
 
 @Component({
   selector: 'app-sign-up',
   standalone: true,
-  imports: [GuidingTorchComponent, BoilingEffectComponent, ProgressLightComponent, CommonModule, SignUpFormsComponent],
+  imports: [GuidingTorchComponent, BoilingEffectComponent, ProgressLightComponent, CommonModule, SignUpFormsComponent, ToastModule ],
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.scss'
 })
@@ -36,7 +37,7 @@ export class SignUpComponent {
   }
 
   onHover() {
-    this.heatingSource = true;
+    this.heatingSource = true;  
     clearInterval(this.interval);
     
       this.interval = setInterval(() => {

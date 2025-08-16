@@ -1,1 +1,256 @@
-<p>transaction-dashboard works!</p>
+<section class="custom-primeng">
+    <p-toast></p-toast>
+    <div class="form-container">
+        <h2 class="form-title">
+            <i class="pi pi-money-bill" style="margin-right: 8px;"></i>
+            Financial Data Input
+        </h2>
+        <form [formGroup]="financialForm" (ngSubmit)="onSubmit()" class="financial-form">
+            <div class="form-row">
+                <label for="bankBalance">
+                    <i class="pi pi-wallet"></i>
+                    Bank Balance
+                </label>
+                <input 
+                    type="text"
+                    pInputText 
+                    appCalculateInput
+                    id="bankBalance" 
+                    formControlName="bankBalance"
+                    class="p-inputtext-sm"
+                    [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('bankBalance')}"
+                />
+            </div>
+
+            <div class="form-row">
+                <label for="kiteWallet">
+                    <i class="pi pi-chart-line"></i>
+                    Kite Wallet
+                </label>
+                <input 
+                    type="text"
+                    pInputText
+                    appCalculateInput
+                    id="kiteWallet" 
+                    formControlName="kiteWallet"
+                    class="p-inputtext-sm"
+                    [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('kiteWallet')}"
+                />
+            </div>
+
+            <div class="form-row">
+                <label for="dcxWallet">
+                    <i class="pi pi-bitcoin"></i>
+                    DCX Wallet
+                </label>
+                <input 
+                    type="text"
+                    pInputText
+                    appCalculateInput
+                    id="dcxWallet" 
+                    formControlName="dcxWallet"
+                    class="p-inputtext-sm"
+                />
+            </div>
+
+            <div class="form-row">
+                <label for="kitePosition">
+                    <i class="pi pi-chart-bar"></i>
+                    Kite Position
+                </label>
+                <input 
+                    type="text"
+                    pInputText
+                    appCalculateInput
+                    id="kitePosition" 
+                    formControlName="kitePosition"
+                    class="p-inputtext-sm"
+                />
+            </div>
+
+            <div class="form-row">
+                <label for="kiteHolding">
+                    <i class="pi pi-hold"></i>
+                    Kite Holding
+                </label>
+                <input 
+                    type="text"
+                    pInputText
+                    appCalculateInput
+                    id="kiteHolding" 
+                    formControlName="kiteHolding"
+                    class="p-inputtext-sm"
+                />
+            </div>
+
+            <div class="form-row">
+                <label for="dcxPosition">
+                    <i class="pi pi-arrow-right-left"></i>
+                    DCX Position
+                </label>
+                <input 
+                    type="text"
+                    pInputText
+                    appCalculateInput
+                    id="dcxPosition" 
+                    formControlName="dcxPosition"
+                    class="p-inputtext-sm"
+                />
+            </div>
+
+            <div class="form-row">
+                <label for="rupayCardBill">
+                    <i class="pi pi-credit-card"></i>
+                    Rupay Card Bill
+                </label>
+                <input 
+                    type="text"
+                    pInputText
+                    appCalculateInput
+                    id="rupayCardBill" 
+                    formControlName="rupayCardBill"
+                    class="p-inputtext-sm"
+                />
+            </div>
+
+            <div class="form-row">
+                <label for="amazonCardBill">
+                    <i class="pi pi-amazon"></i>
+                    Amazon Card Bill
+                </label>
+                <input 
+                    type="text"
+                    pInputText
+                    appCalculateInput
+                    id="amazonCardBill" 
+                    formControlName="amazonCardBill"
+                    class="p-inputtext-sm"
+                />
+            </div>
+
+            <div class="form-row">
+                <label for="earning">
+                    <i class="pi pi-briefcase"></i>
+                    Earning
+                </label>
+                <div class="input-with-actions">
+                    <input 
+                        type="text"
+                        pInputText
+                        appCalculateInput
+                        id="earning" 
+                        formControlName="earning"
+                        class="flex-grow p-inputtext-sm"
+                    />
+                    <div class="actions-container">
+                        <p-button 
+                            type="button"
+                            label="Single"
+                            icon="pi pi-plus"
+                            styleClass="p-button-sm p-button-outlined"
+                            (onClick)="addSingleEarning()"
+                            pTooltip="Add as single entry with unknown category"
+                        ></p-button>
+                        <p-button 
+                            type="button"
+                            label="Multiple"
+                            icon="pi pi-list"
+                            styleClass="p-button-sm p-button-outlined"
+                            (onClick)="openEarningDialog()"
+                            pTooltip="Add multiple entries with categories"
+                        ></p-button>
+                    </div>
+                </div>
+                <div class="entry-info" *ngIf="getEarningEntriesText()">
+                    <small><i class="pi pi-info-circle"></i> {{getEarningEntriesText()}}</small>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label for="loss">
+                    <i class="pi pi-thumbs-down"></i>
+                    Loss
+                </label>
+                <div class="input-with-actions">
+                    <input 
+                        type="text"
+                        pInputText
+                        appCalculateInput
+                        id="loss" 
+                        formControlName="loss"
+                        class="flex-grow p-inputtext-sm"
+                    />
+                    <div class="actions-container">
+                        <p-button 
+                            type="button"
+                            label="Single"
+                            icon="pi pi-plus"
+                            styleClass="p-button-sm p-button-outlined"
+                            (onClick)="addSingleLoss()"
+                            pTooltip="Add as single entry with unknown category"
+                        ></p-button>
+                        <p-button 
+                            type="button"
+                            label="Multiple"
+                            icon="pi pi-list"
+                            styleClass="p-button-sm p-button-outlined"
+                            (onClick)="openLossDialog()"
+                            pTooltip="Add multiple entries with categories"
+                        ></p-button>
+                    </div>
+                </div>
+                <div class="entry-info" *ngIf="getLossEntriesText()">
+                    <small><i class="pi pi-info-circle"></i> {{getLossEntriesText()}}</small>
+                </div>
+            </div>
+
+            <div class="form-summary">
+                <div class="summary-item total-assets">
+                    <span>Total Assets</span>
+                    <span>₹ {{calculateTotalAssets() | number:'1.2-2'}}</span>
+                </div>
+                <div class="summary-item total-liabilities">
+                    <span>Total Liabilities</span>
+                    <span>₹ {{calculateTotalLiabilities() | number:'1.2-2'}}</span>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button 
+                    pButton 
+                    type="submit" 
+                    [disabled]="financialForm.invalid || loading"
+                    [loading]="loading"
+                    class="submit-button p-button-raised"
+                    label="Save Financial Data"
+                    icon="pi pi-check"
+                ></button>
+                <button 
+                    pButton 
+                    type="button" 
+                    (click)="onReset()"
+                    class="reset-button p-button-raised p-button-secondary"
+                    label="Reset"
+                    icon="pi pi-refresh"
+                ></button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- Multi-Entry Dialogs -->
+<app-multi-entry-dialog 
+    [(visible)]="showEarningDialog"
+    [dialogTitle]="'Add/Edit Earning Entries'"
+    [initialEntries]="earningEntries"
+    (entriesSaved)="onEarningEntriesSaved($event)"
+    (cancelled)="onEarningDialogCancelled()">
+</app-multi-entry-dialog>
+
+<app-multi-entry-dialog 
+    [(visible)]="showLossDialog"
+    [dialogTitle]="'Add/Edit Loss Entries'"
+    [initialEntries]="lossEntries"
+    (entriesSaved)="onLossEntriesSaved($event)"
+    (cancelled)="onLossDialogCancelled()">
+</app-multi-entry-dialog>

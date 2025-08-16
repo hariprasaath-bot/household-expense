@@ -9,8 +9,12 @@
 </app-boiling-effect>
 
 <app-boiling-effect>
-    <section class="">
-        <p class="boiling-effect title-style" [ngClass]="{'boiled': boiled}"> Find your Way IN</p>
-        <app-sign-up-forms></app-sign-up-forms>
+    <p-toast [position]="'bottom-right'" [showTransitionOptions]="'150ms'" [showTransformOptions]="'translateX(100%)'" [hideTransitionOptions]="'150ms'" [hideTransformOptions]="'translateX(100%)'" />
+    <section>
+        <div class="mb-2">
+            <app-sign-up-forms></app-sign-up-forms>
+        </div>
+        <div class="boiling-effect text-black-alpha-90 flex align-items-center justify-content-center" [ngClass]="{'boiled': boiled}"> Find
+            your Way IN</div>
     </section>
 </app-boiling-effect>

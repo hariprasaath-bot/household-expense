@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { SignUpComponent } from "../../components/sign-up/sign-up.component";
 
 @Component({
@@ -6,8 +7,12 @@ import { SignUpComponent } from "../../components/sign-up/sign-up.component";
   standalone: true,
   imports: [SignUpComponent],
   templateUrl: './user-management.component.html',
-  styleUrl: './user-management.component.scss'
+  styleUrls: ['./user-management.component.scss']
 })
-export class UserManagementComponent {
+export class UserManagementComponent implements OnInit {
 
+  constructor(private router: Router) { }
+
+  ngOnInit(): void {
+  }
 }

@@ -1,9 +1,16 @@
 package in.house.financial.services;
 
+import in.house.financial.dto.BankAccountRequest;
+import in.house.financial.dto.CategoryRequest;
+import in.house.financial.dto.UserProfileDTO;
+import in.house.financial.entity.Categories;
 import in.house.financial.entity.User;
 import in.house.financial.entity.UserAccessKey;
 import in.house.financial.interfaces.JwtService;
 import in.house.financial.interfaces.UserInterface;
+import in.house.financial.model.BankAccount;
+import in.house.financial.model.Category;
+import in.house.financial.repository.CategoriesRepo;
 import in.house.financial.repository.UserAccessKeyRepository;
 import in.house.financial.repository.UserRepository;
 import in.house.financial.securityconfig.UserSession;
@@ -13,10 +20,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -28,6 +37,7 @@ public class UserServicesImpl implements UserInterface {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final UserSession userSession;
+    private final CategoriesRepo categoriesRepo;
 
 
     public ResponseEntity<Object> createUser(SignUpRequest request) {
@@ -128,5 +138,201 @@ public class UserServicesImpl implements UserInterface {
         return reponse;
     }
 
+    @Override
+    public ResponseEntity<UserProfileDTO> getUserProfile() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String email = authentication.getName();
+            Optional<User> userOptional = userRepository.findByEmail(email);
+            
+            if (userOptional.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            
+            User user = userOptional.get();
+            UserProfileDTO userProfileDTO = mapUserToUserProfileDTO(user);
+            
+            return new ResponseEntity<>(userProfileDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Exception occurred in getting user profile: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
+    @Override
+    public ResponseEntity<UserProfileDTO> getUserProfileById(String userId) {
+        try {
+            Optional<User> userOptional = userRepository.findById(userId);
+            
+            if (userOptional.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            
+            User user = userOptional.get();
+            UserProfileDTO userProfileDTO = mapUserToUserProfileDTO(user);
+            
+            return new ResponseEntity<>(userProfileDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Exception occurred in getting user profile by ID: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public ResponseEntity<String> updateUserProfile(UserProfileDTO userProfileDTO) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String email = authentication.getName();
+            Optional<User> userOptional = userRepository.findByEmail(email);
+            
+            if (userOptional.isEmpty()) {
+                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+            }
+            
+            User user = userOptional.get();
+            
+            // Update user fields
+            if (userProfileDTO.getName() != null) {
+                user.setName(userProfileDTO.getName());
+            }
+            
+            if (userProfileDTO.getEmail() != null) {
+                user.setEmail(userProfileDTO.getEmail());
+            }
+            user.setUpdatedBy(email);
+            userRepository.save(user);
+            
+            return new ResponseEntity<>("Profile updated successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Exception occurred in updating user profile: {}", e.getMessage());
+            return new ResponseEntity<>("Error updating profile: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public ResponseEntity<String> addBankAccount(BankAccountRequest bankAccountRequest) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String email = authentication.getName();
+            Optional<User> userOptional = userRepository.findByEmail(email);
+            
+            if (userOptional.isEmpty()) {
+                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+            }
+            
+            User user = userOptional.get();
+            
+            BankAccount bankAccount = BankAccount.builder()
+                    .id(UUID.randomUUID().toString())
+                    .bankName(bankAccountRequest.getBankName())
+                    .accountNumber(bankAccountRequest.getAccountNumber())
+                    .accountType(bankAccountRequest.getAccountType())
+                    .build();
+            
+            user.addBankAccount(bankAccount);
+            user.setUpdatedBy(email);
+            userRepository.save(user);
+            
+            return new ResponseEntity<>("Bank account added successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Exception occurred in adding bank account: {}", e.getMessage());
+            return new ResponseEntity<>("Error adding bank account: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public ResponseEntity<String> removeBankAccount(String bankAccountId) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String email = authentication.getName();
+            Optional<User> userOptional = userRepository.findByEmail(email);
+            
+            if (userOptional.isEmpty()) {
+                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+            }
+            
+            User user = userOptional.get();
+            
+            boolean removed = user.removeBankAccount(bankAccountId);
+            if (!removed) {
+                return new ResponseEntity<>("Bank account not found", HttpStatus.NOT_FOUND);
+            }
+            
+            user.setUpdatedBy(email);
+            userRepository.save(user);
+            
+            return new ResponseEntity<>("Bank account removed successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Exception occurred in removing bank account: {}", e.getMessage());
+            return new ResponseEntity<>("Error removing bank account: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public ResponseEntity<String> addCategory(List<CategoryRequest> categoryRequest) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String email = authentication.getName();
+            Optional<User> userOptional = userRepository.findByEmail(email);
+            
+            if (userOptional.isEmpty()) {
+                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+            }
+            
+            User user = userOptional.get();
+            List<Categories> categories = new ArrayList<>();
+            categoryRequest.forEach(category -> {
+                // Create a new Category for each request
+                categories.add(Categories.builder()
+                        .id(UUID.randomUUID().toString())
+                        .name(category.getName())
+                        .categoryType(category.getCategoryType())
+                        .searchString(category.getSearchString())
+                        .userId(user.getId())
+                        .isCustom(true)
+                        .build());
+
+            });
+
+            categoriesRepo.saveAll(categories);
+            return new ResponseEntity<>("Category added successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Exception occurred in adding category: {}", e.getMessage());
+            return new ResponseEntity<>("Error adding category: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public ResponseEntity<String> removeCategory(String categoryId) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String email = authentication.getName();
+            Optional<User> userOptional = userRepository.findByEmail(email);
+            if (userOptional.isEmpty()) {
+                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+            }
+            categoriesRepo.deleteByIdAndUserId(categoryId, userOptional.get().getId());
+
+            return new ResponseEntity<>("Category removed successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Exception occurred in removing category: {}", e.getMessage());
+            return new ResponseEntity<>("Error removing category: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    /**
+     * Maps a User entity to a UserProfileDTO.
+     * 
+     * @param user The User entity
+     * @return The UserProfileDTO
+     */
+    private UserProfileDTO mapUserToUserProfileDTO(User user) {
+        return UserProfileDTO.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .memberSince(user.getCreatedTime())
+                .bankAccounts(user.getBankAccounts() != null ? user.getBankAccounts() : new ArrayList<>())
+                .build();
+    }
 }

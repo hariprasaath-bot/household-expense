@@ -52,8 +52,8 @@ export class AuthService {
           this.startRefreshTokenTimer();
   
           // Redirect to the intended route or default route after login
-          const returnUrl = this.router.parseUrl(this.router.url).queryParams['returnUrl'] || '/home';
-          this.router.navigateByUrl(returnUrl);
+          const returnUrl = this.router.parseUrl(this.router.url).queryParams['returnUrl'] || '/transactions';
+          this.router.navigateByUrl('/transactions');
         }),
         catchError(error => throwError(() => error))
       );
@@ -68,7 +68,7 @@ export class AuthService {
       email: null
     });
     this.stopRefreshTokenTimer();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/sign-up']);
   }
 
   refreshToken(): Observable<any> {

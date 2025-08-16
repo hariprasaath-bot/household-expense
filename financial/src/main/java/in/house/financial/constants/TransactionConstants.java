@@ -5,6 +5,7 @@ public class TransactionConstants {
     public static final String FOOD = "FOOD";
     public static final String SAVING = "SAVING";
     public static final String BILL = "BILL";
+    public static final String UNKNOWN = "UNKNOWN";
 
 
 }

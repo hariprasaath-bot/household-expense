@@ -1,84 +1,77 @@
 <section>
   <div class="section-style" >
     <div class="form-container">
-      <form [formGroup]="newUserForm" (ngSubmit)="createTheUser()">
+      <!-- Sign-Up Form -->
+      <form *ngIf="!isSignInMode" [formGroup]="newUserForm" (ngSubmit)="createTheUser()">
         <section [ngClass]="{'boiled': isBorderActive}" class="form-style">
+          <!-- Name -->
           <label class="boiling-effect custom-field three" [ngClass]="{'boiled': isBorderActive}">
-            <input pRipple type="text" placeholder="&nbsp;" formControlName="deceasedName"
-              [ngClass]="{'active-border': isBorderActive, 'ng-invalid': newUserForm.get('deceasedName')?.invalid && (newUserForm.get('deceasedName')?.dirty || newUserForm.get('deceasedName')?.touched)}" />
-            <span class="placeholder">Name of deceased</span>
+            <input pRipple type="text" placeholder="&nbsp;" formControlName="name" [ngClass]="{'active-border': isBorderActive, 'ng-invalid': newUserForm.get('name')?.invalid && (newUserForm.get('name')?.dirty || newUserForm.get('name')?.touched)}" />
+            <span class="placeholder">Name</span>
             <span class="border"></span>
           </label>
-          <span [ngClass]="{'boiled': isBorderActive}"
-            *ngIf="newUserForm.get('deceasedName')?.invalid && (newUserForm.get('deceasedName')?.dirty || newUserForm.get('deceasedName')?.touched)"
-            class="error-message">
-            Need name to wake-up
+          <span [ngClass]="{'boiled': isBorderActive}" *ngIf="newUserForm.get('name')?.invalid && (newUserForm.get('name')?.dirty || newUserForm.get('name')?.touched)" class="text-black-alpha-90">
+            Name is required.
           </span>
 
+          <!-- Email -->
           <label class="custom-field three boiling-effect" [ngClass]="{'boiled': isBorderActive}">
-            <input pRipple type="text" placeholder="&nbsp;" formControlName="deceasedEmail"
-              [ngClass]="{'active-border': isBorderActive, 'ng-invalid': newUserForm.get('deceasedEmail')?.invalid && (newUserForm.get('deceasedEmail')?.dirty || newUserForm.get('deceasedEmail')?.touched)}" />
-            <span class="placeholder">Mail of deceased</span>
+            <input pRipple type="text" placeholder="&nbsp;" formControlName="email" [ngClass]="{'active-border': isBorderActive, 'ng-invalid': newUserForm.get('email')?.invalid && (newUserForm.get('email')?.dirty || newUserForm.get('email')?.touched)}" />
+            <span class="placeholder">Email</span>
             <span class="border"></span>
           </label>
-          <div
-            *ngIf="newUserForm.get('deceasedEmail')?.invalid && (newUserForm.get('deceasedEmail')?.dirty || newUserForm.get('deceasedEmail')?.touched)"
-            class="error-message">
-            <span *ngIf="newUserForm.get('deceasedEmail')?.errors?.['required']">Email is required.</span>
-            <span *ngIf="newUserForm.get('deceasedEmail')?.errors?.['email']">Invalid email format.</span>
+          <div [ngClass]="{'boiled': isBorderActive}" *ngIf="newUserForm.get('email')?.invalid && (newUserForm.get('email')?.dirty || newUserForm.get('email')?.touched)" class="text-black-alpha-90">  
+            <span *ngIf="newUserForm.get('email')?.errors?.['required']">Email is required.</span>
+            <span *ngIf="newUserForm.get('email')?.errors?.['email']">Invalid email format.</span>
           </div>
 
+          <!-- Password -->
           <label class="boiling-effect custom-field three" [ngClass]="{'boiled': isBorderActive}">
-            <input pRipple type="password" placeholder="&nbsp;" formControlName="deceasedSecret"
-              [ngClass]="{'active-border': isBorderActive, 'ng-invalid': newUserForm.get('deceasedSecret')?.invalid && (newUserForm.get('deceasedSecret')?.dirty || newUserForm.get('deceasedSecret')?.touched)}" />
-            <span class="placeholder">Secret of deceased</span>
+            <input pRipple type="password" placeholder="&nbsp;" formControlName="password" [ngClass]="{'active-border': isBorderActive, 'ng-invalid': newUserForm.get('password')?.invalid && (newUserForm.get('password')?.dirty || newUserForm.get('password')?.touched)}" />
+            <span class="placeholder">Password</span>
             <span class="border"></span>
           </label>
-          <span
-            *ngIf="newUserForm.get('deceasedSecret')?.invalid && (newUserForm.get('deceasedSecret')?.dirty || newUserForm.get('deceasedSecret')?.touched)"
-            class="error-message">
-            Secret is required.
+          <span [ngClass]="{'boiled': isBorderActive}"  *ngIf="newUserForm.get('password')?.invalid && (newUserForm.get('password')?.dirty || newUserForm.get('password')?.touched)" class="text-black-alpha-90">
+            Password is required.
           </span>
-        </section>
+        </section>  
       </form>
-      <form [formGroup]="signInForm" (ngSubmit)="userSignIn()">
+
+      <!-- Sign-In Form -->
+      <form *ngIf="isSignInMode" [formGroup]="signInForm" (ngSubmit)="userSignIn()">
         <section [ngClass]="{'boiled': isBorderActive}" class="form-style">
+          <!-- Email -->
           <label class="custom-field three boiling-effect" [ngClass]="{'boiled': isBorderActive}">
-            <input pRipple type="text" placeholder="&nbsp;" formControlName="deceasedEmail"
-              [ngClass]="{'active-border': isBorderActive, 'ng-invalid': newUserForm.get('deceasedEmail')?.invalid && (newUserForm.get('deceasedEmail')?.dirty || newUserForm.get('deceasedEmail')?.touched)}" />
-            <span class="placeholder">Mail of deceased</span>
+            <input pRipple type="text" placeholder="&nbsp;" formControlName="email" [ngClass]="{'active-border': isBorderActive, 'ng-invalid': signInForm.get('email')?.invalid && (signInForm.get('email')?.dirty || signInForm.get('email')?.touched)}" />
+            <span class="placeholder">Email</span>
             <span class="border"></span>
           </label>
-          <div
-            *ngIf="newUserForm.get('deceasedEmail')?.invalid && (newUserForm.get('deceasedEmail')?.dirty || newUserForm.get('deceasedEmail')?.touched)"
-            class="error-message">
-            <span *ngIf="newUserForm.get('deceasedEmail')?.errors?.['required']">Email is required.</span>
-            <span *ngIf="newUserForm.get('deceasedEmail')?.errors?.['email']">Invalid email format.</span>
+          <div [ngClass]="{'boiled': isBorderActive}" *ngIf="signInForm.get('email')?.invalid && (signInForm.get('email')?.dirty || signInForm.get('email')?.touched)" class="text-black-alpha-90">
+            <span *ngIf="signInForm.get('email')?.errors?.['required']">Email is required.</span>
+            <span *ngIf="signInForm.get('email')?.errors?.['email']">Invalid email format.</span>
           </div>
 
+          <!-- Password -->
           <label class="boiling-effect custom-field three" [ngClass]="{'boiled': isBorderActive}">
-            <input pRipple type="password" placeholder="&nbsp;" formControlName="deceasedSecret"
-              [ngClass]="{'active-border': isBorderActive, 'ng-invalid': newUserForm.get('deceasedSecret')?.invalid && (newUserForm.get('deceasedSecret')?.dirty || newUserForm.get('deceasedSecret')?.touched)}" />
-            <span class="placeholder">Secret of deceased</span>
+            <input pRipple type="password" placeholder="&nbsp;" formControlName="password" [ngClass]="{'active-border': isBorderActive, 'ng-invalid': signInForm.get('password')?.invalid && (signInForm.get('password')?.dirty || signInForm.get('password')?.touched)}" />
+            <span class="placeholder">Password</span>
             <span class="border"></span>
           </label>
-          <span
-            *ngIf="newUserForm.get('deceasedSecret')?.invalid && (newUserForm.get('deceasedSecret')?.dirty || newUserForm.get('deceasedSecret')?.touched)"
-            class="error-message">
-            Secret is required.
+          <span [ngClass]="{'boiled': isBorderActive}" *ngIf="signInForm.get('password')?.invalid && (signInForm.get('password')?.dirty || signInForm.get('password')?.touched)" class="text-black-alpha-90">
+            Password is required.
           </span>
         </section>
       </form>
     </div>
     <div class="submit-container">
-      <button (click)="createTheUser()" type="submit" class="button-container boiling-effect"
-        [ngClass]="{'boiled': isBorderActive}">
-        <p [ngClass]="{'boiled': isBorderActive}">SIGN UP</p>
+      <button (click)="isSignInMode ? userSignIn() : createTheUser()" type="submit" class="button-container boiling-effect text-black-alpha-90" [ngClass]="{'boiled': isBorderActive}">
+        <p [ngClass]="{'boiled': isBorderActive}">{{ isSignInMode ? 'SIGN IN' : 'SIGN UP' }}</p>
       </button>
-      <button (click)="userSignIn()" type="submit" class="button-container boiling-effect"
-        [ngClass]="{'boiled': isBorderActive}">
-        <p [ngClass]="{'boiled': isBorderActive}">SIGN IN</p>
-      </button>
+    </div>
+    <div [ngClass]="{'boiled': isBorderActive}" class="cursor-pointer text-black-alpha-90 boiling-effect">
+      <span (click)="toggleMode()">
+        {{ isSignInMode ? 'Need to create an account?' : 'Already have an account?' }}
+      </span>
     </div>
   </div>
 </section>

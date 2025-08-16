@@ -43,7 +43,7 @@ export const authInterceptor: HttpInterceptorFn = (
           }),
           catchError((refreshError) => {
             authService.logout();
-            router.navigate(['/login']);
+            router.navigate(['/sign-up']);
             return throwError(() => refreshError);
           })
         );

@@ -17,4 +17,18 @@ public class DateConverterUtil {
         Date requiredDate = formatter.parse(date);
         return requiredDate.getTime();
     }
+
+
+
+
+
+    private static final SimpleDateFormat customDateFormat = new SimpleDateFormat("dd,MM,yyyy");
+
+    public static Date convertToDate(String dateString) {
+        try {
+            return customDateFormat.parse(dateString);
+        } catch (ParseException e) {
+            throw new RuntimeException("Invalid date format: " + dateString, e);
+        }
+    }
 }

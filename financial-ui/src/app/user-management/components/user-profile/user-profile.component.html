@@ -1,0 +1,152 @@
+<div class="profile-container dark-theme p-4">
+    <!-- Header -->
+    <div class="flex justify-content-between align-items-center mb-4">
+      <h1 class="m-0"><i class="pi pi-user mr-2"></i> User Profile</h1>
+      <div>
+        <p-button *ngIf="!isEditMode" icon="pi pi-pencil" (click)="toggleEdit()" label="Edit" styleClass="p-button-text"></p-button>
+        <p-button *ngIf="isEditMode" icon="pi pi-times" (click)="toggleEdit()" label="Cancel" styleClass="p-button-danger p-button-text mr-2"></p-button>
+        <p-button *ngIf="isEditMode" icon="pi pi-save" (click)="saveProfile()" label="Save" styleClass="p-button-success p-button-text"></p-button>
+      </div>
+    </div>
+  
+    <div class="profile-content">
+      <!-- View Mode -->
+      <div *ngIf="!isEditMode">
+        <div class="grid">
+          <!-- User Info Card -->
+          <div class="col-12 md:col-6 lg:col-4">
+            <div class="card h-full">
+              <h3>{{ user.name }}</h3>
+              <p><i class="pi pi-envelope mr-2"></i> {{ user.email || 'Not provided' }}</p>
+              <p *ngIf="user.memberSince"><i class="pi pi-calendar mr-2"></i> Member Since: {{ user.memberSince | date: 'longDate' }}</p>
+            </div>
+          </div>
+  
+          <!-- Bank Accounts Card -->
+          <div class="col-12 md:col-6 lg:col-8">
+            <div class="card h-full">
+              <h3>Bank Accounts</h3>
+              <ul *ngIf="user.bankAccounts && user.bankAccounts.length > 0" class="p-0" style="list-style: none;">
+                <li *ngFor="let account of user.bankAccounts" class="flex align-items-center mb-2">
+                  <i class="pi pi-credit-card mr-2"></i>
+                  <span><strong>{{ account.bankName }}</strong> ({{ account.accountType }}) - Ending in {{ account.last4 }}</span>
+                </li>
+              </ul>
+              <p *ngIf="!user.bankAccounts || user.bankAccounts.length === 0">No bank accounts linked.</p>
+            </div>
+          </div>
+  
+          <!-- Statistics Section -->
+          <div class="col-12">
+              <h3 class="mt-4">Statistics</h3>
+              <div class="grid text-center">
+                  <div class="col-12 md:col-6 lg:col-3">
+                      <div class="stat-card">
+                          <div class="stat-icon"><i class="pi pi-file-import"></i></div>
+                          <div class="stat-value">{{ statistics.filesUploaded }}</div>
+                          <div class="stat-label">Files Uploaded</div>
+                      </div>
+                  </div>
+                  <div class="col-12 md:col-6 lg:col-3">
+                      <div class="stat-card">
+                          <div class="stat-icon"><i class="pi pi-chart-line"></i></div>
+                          <div class="stat-value">{{ statistics.totalTransactions }}</div>
+                          <div class="stat-label">Total Transactions</div>
+                      </div>
+                  </div>
+                  <div class="col-12 md:col-6 lg:col-3">
+                      <div class="stat-card">
+                          <div class="stat-icon"><i class="pi pi-dollar"></i></div>
+                          <div class="stat-value">{{ statistics.monthlySpending | currency:'USD':'symbol':'1.0-0' }}</div>
+                          <div class="stat-label">Monthly Spending</div>
+                      </div>
+                  </div>
+                  <div class="col-12 md:col-6 lg:col-3">
+                      <div class="stat-card">
+                          <div class="stat-icon"><i class="pi pi-tag"></i></div>
+                          <div class="stat-value">{{ statistics.topCategory || 'N/A' }}</div>
+                          <div class="stat-label">Top Category</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Actions -->
+          <div class="col-12 flex justify-content-end mt-4">
+              <p-button label="Change Password" icon="pi pi-lock" (click)="changePassword()" styleClass="p-button-secondary"></p-button>
+          </div>
+  
+        </div>
+      </div>
+  
+      <!-- Edit Mode -->
+      <div *ngIf="isEditMode">
+          <div class="grid">
+              <!-- Edit User Info -->
+              <div class="col-12">
+                  <div class="card">
+                      <div class="grid formgrid">
+                          <div class="col-12 md:col-6 field">
+                              <label for="profileName">Profile Name</label>
+                              <input type="text" id="profileName" [(ngModel)]="user.name" pInputText>
+                          </div>
+                          <div class="col-12 md:col-6 field">
+                              <label for="email">Email</label>
+                              <input type="email" id="email" [(ngModel)]="user.email" pInputText>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+  
+              <!-- Edit Bank Accounts -->
+              <div class="col-12 md:col-6">
+                  <div class="card h-full">
+                      <h3>Bank Accounts</h3>
+                      <ul class="p-0" style="list-style: none;">
+                          <li *ngFor="let account of user.bankAccounts" class="flex justify-content-between align-items-center mb-2">
+                              <span><i class="pi pi-credit-card mr-2"></i> {{ account.bankName }}</span>
+                              <p-button icon="pi pi-trash" (click)="removeBankAccount(account)" styleClass="p-button-danger p-button-text"></p-button>
+                          </li>
+                      </ul>
+                      <div class="flex align-items-center mt-3">
+                          <input type="text" #newAccount placeholder="Add new bank name" pInputText class="mr-2" style="flex-grow: 1;">
+                          <p-button icon="pi pi-plus" (click)="addBankAccount(newAccount.value); newAccount.value=''" label="Add" styleClass="p-button-success"></p-button>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- Edit Categories -->
+              <div class="col-12 md:col-6">
+                  <div class="card h-full">
+                      <h3>Transaction Categories</h3>
+                      <p class="text-sm text-500 mt-0 mb-3">Default categories cannot be removed</p>
+                      <div class="grid">
+                          <div *ngFor="let category of user.categories" class="col-12 md:col-6">
+                              <div class="flex align-items-center mb-2">
+                                  <span class="mr-2">{{ category.name }}</span>
+                                  <p-button *ngIf="category.isCustom" 
+                                            icon="pi pi-trash" 
+                                            (click)="removeCategory(category)" 
+                                            styleClass="p-button-text p-button-sm p-button-danger"
+                                            [text]="true"
+                                            [rounded]="true"
+                                            severity="danger"
+                                            size="small"></p-button>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="flex align-items-center mt-3">
+                          <input type="text" #newCategory placeholder="Add new category" pInputText class="mr-2" style="flex-grow: 1;">
+                          <p-button icon="pi pi-plus" 
+                                    (click)="addCategory(newCategory.value); newCategory.value=''" 
+                                    label="Add" 
+                                    styleClass="p-button-success"
+                                    [disabled]="!newCategory.value">
+                          </p-button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>

@@ -1,50 +1,79 @@
 .upload-styles {
-    transition: all 1.5s ease-in-out;
+    transition: var(--transition);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 5%;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: var(--shadow-md);
+    max-width: 800px;
+    margin: 2rem auto;
 
     .custom-upload-button {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        gap: 0.75rem;
         color: #d2691e;
-        background: black;
-        border: 0px;
+        background: var(--primary-color);
+        border: none;
         font-size: 1rem;
-        border-radius: 20px;
-        box-shadow: -3px 7px 23px -4px rgba(107, 111, 106, 0.425);
-        padding: 25px;
-        transition: all 0.75s ease-in-out;
+        font-weight: 500;
+        border-radius: 0.5rem;
+        padding: 1rem 2rem;
+        cursor: pointer;
+        transition: var(--transition);
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+
         &:hover {
-            box-shadow: -3px 7px 23px -4px rgba(210, 105, 30, 0.63);
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+
+        i {
+            font-size: 1.5rem;
         }
     }
 
-    .underlying-input{
-            height: 100%;
-            width: 100%;
-            opacity: 0;
-            cursor: pointer;
+    .underlying-input {
+        height: 100%;
+        width: 100%;
+        opacity: 0;
+        cursor: pointer;
     }
+
     .progress-style {
         width: 300px;
         padding: 0px;
-        padding-top: 5px;
-        padding-bottom: 5px;
+        height: 25px;
         transition: all 1.5s ease-in-out;
+        box-shadow: -3px 7px 23px -4px rgba(210, 105, 30, 0.63);
+
+        .progress-bar {
+            height: 100%;
+            background-color: chocolate;
+        }
+
+        .progress-bar-striped {
+            // background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+            background-size: 1rem 1rem;
+        }
+
     }
 
-    .custom-progress-bar .p-progressbar {
-        background-color: black;
-        animation: progressBarAnimation 3s ease-in-out;
-    }
-
-    .custom-progress-bar .p-progressbar-value {
-        background-color: chocolate;
+    .progress-text {
+        color: #d2691e;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 9px;
     }
 
 

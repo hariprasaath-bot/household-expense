@@ -1,5 +1,3 @@
-
-
 .red-icon {
   color: var(--boiling-color);
 }
@@ -23,36 +21,33 @@
   justify-content: space-evenly;
   align-items: center;
   flex-direction: column;
-  gap: 60px;
+  gap: 20px; // Reduced gap for a tighter layout
 
   .form-container {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center; // Center the form
     align-items: center;
-    flex-direction: row;
-    gap: 100px;
-    margin-top: 100px;
+    flex-direction: column;
+    gap: 20px; // Reduced gap
+    margin-top: 50px; // Reduced margin
 
     .form-style {
       display: flex;
-      justify-content: space-evenly;
+      justify-content: center;
       align-items: center;
       flex-direction: column;
+      gap: 15px; // Reduced gap
     }
   }
 
   .submit-container {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
     flex-direction: row;
-    gap: 100px;
+    gap: 20px; // Reduced gap
   }
 }
-
-
-
-
 
 .custom-field {
   position: relative;
@@ -61,6 +56,9 @@
   margin-bottom: 5px;
   display: inline-block;
   --field-padding: 12px;
+}
+.boiled {
+  color: var(--boiling-color) !important;
 }
 
 .custom-field input {
@@ -75,7 +73,6 @@
   color: var(--draw-color);
 }
 
-
 .custom-field .placeholder {
   position: absolute;
   left: 4px;
@@ -87,13 +84,9 @@
   line-height: 100%;
   transform: translateY(-50%);
   color: var(--boiling-color);
-  transition:
-    top 0.3s ease,
-    color 0.3s ease,
-    font-size 0.3s ease;
+  transition: top 0.3s ease, color 0.3s ease, font-size 0.3s ease;
 }
 
-/* Add the 'active-border' class dynamically */
 .custom-field input.active-border+.placeholder,
 .custom-field input:focus+.placeholder,
 .custom-field input:not(:placeholder-shown)+.placeholder {
@@ -137,10 +130,7 @@
   bottom: 0;
   border-right: 0px solid var(--draw-color);
   border-bottom: 0px solid var(--draw-color);
-  transition:
-    border 0s linear calc(var(--draw-duration) * 4),
-    height var(--draw-duration) var(--draw-easing) calc(var(--draw-duration) * 2),
-    width var(--draw-duration) var(--draw-easing) calc(var(--draw-duration) * 3);
+  transition: border 0s linear calc(var(--draw-duration) * 4), height var(--draw-duration) var(--draw-easing) calc(var(--draw-duration) * 2), width var(--draw-duration) var(--draw-easing) calc(var(--draw-duration) * 3);
 }
 
 .custom-field.three .border::after {
@@ -148,13 +138,9 @@
   top: 0;
   border-left: 0px solid var(--draw-color);
   border-top: 0px solid var(--draw-color);
-  transition:
-    border 0s linear calc(var(--draw-duration) * 2),
-    height var(--draw-duration) var(--draw-easing),
-    width var(--draw-duration) var(--draw-easing) var(--draw-duration);
+  transition: border 0s linear calc(var(--draw-duration) * 2), height var(--draw-duration) var(--draw-easing), width var(--draw-duration) var(--draw-easing) var(--draw-duration);
 }
 
-/* Modify for 'active-border' class */
 .custom-field.three input.active-border~.border::before,
 .custom-field.three input:focus~.border::before,
 .custom-field.three input:not(:placeholder-shown)~.border::before {
@@ -170,18 +156,14 @@
   width: 100%;
   height: 100%;
   border-width: var(--draw-line-width);
-  transition-delay:
-    calc(var(--draw-duration) * 2),
-    calc(var(--draw-duration) * 3),
-    calc(var(--draw-duration) * 2);
+  transition-delay: calc(var(--draw-duration) * 2), calc(var(--draw-duration) * 3), calc(var(--draw-duration) * 2);
 }
-
 
 .button-container {
   display: flex;
   padding: 8px;
   border-radius: 8px;
-  width: 200px;
+  width: 250px; // Match input width
   height: 40px;
   align-items: center;
   justify-content: center;
@@ -189,4 +171,20 @@
   box-shadow: none;
   border: 1.2px solid;
   border-color: var(--boiling-color);
-} 
+  cursor: pointer;
+}
+
+.toggle-mode {
+  text-align: center;
+  margin-top: 1rem;
+
+  a {
+    color: var(--boiling-color);
+    cursor: pointer;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
