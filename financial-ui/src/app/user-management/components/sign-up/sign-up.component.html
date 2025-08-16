@@ -1,0 +1,20 @@
+<app-guiding-torch></app-guiding-torch>
+<app-progress-light></app-progress-light>
+<app-boiling-effect>
+    <video #videoPlayer (mouseenter)="onHover()" (mouseleave)="onLeave()" class="light-source" loop
+        onloadedmetadata="this.muted=true" preload="auto">
+        <source src="/assets/gifs/fire.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+</app-boiling-effect>
+
+<app-boiling-effect>
+    <p-toast [position]="'bottom-right'" [showTransitionOptions]="'150ms'" [showTransformOptions]="'translateX(100%)'" [hideTransitionOptions]="'150ms'" [hideTransformOptions]="'translateX(100%)'" />
+    <section>
+        <div class="mb-2">
+            <app-sign-up-forms></app-sign-up-forms>
+        </div>
+        <div class="boiling-effect text-black-alpha-90 flex align-items-center justify-content-center" [ngClass]="{'boiled': boiled}"> Find
+            your Way IN</div>
+    </section>
+</app-boiling-effect>

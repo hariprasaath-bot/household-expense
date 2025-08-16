@@ -1,0 +1,53 @@
+.title-holder {
+  padding: 9px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  color: chocolate;
+  background-color: black;
+  padding: 2px;
+  border: 0px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; // To space out menu and profile link
+
+  .menu {
+    display: inline-flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px; // Add some space between menu items
+  }
+
+  .menu-text {
+    display: flex; // Ensure icon and text are aligned
+    align-items: center;
+    border-radius: 14px;
+    padding: 9px 12px;
+    font-size: 16px;
+    cursor: pointer;
+    --p-ripple-color: chocolate;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    color: chocolate;
+
+    i {
+      margin-right: 8px; // Space between icon and text
+      font-size: 1.1rem;
+    }
+
+    &:hover {
+      color: ivory;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      background: rgba(210, 105, 30, 0.15); // chocolate highlight
+      box-shadow: 0 2px 12px 0 rgba(250, 135, 53, 0.658);
+    }
+
+    &:active {
+      background: rgba(210, 105, 30, 0.3); // deeper chocolate on click
+      box-shadow: 0 4px 20px 0 rgba(210, 105, 30, 0.3);
+    }
+  }
+
+
+}

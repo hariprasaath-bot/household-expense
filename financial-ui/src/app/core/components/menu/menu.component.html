@@ -1,0 +1,22 @@
+<div class="title-holder">
+  <div class="menu">
+    <a class="menu-text" *ngFor="let item of menuItems$ | async" [routerLink]="item.routerLink"
+      (click)="item.command && item.command($event)" pRipple>
+      <i [class]="item.icon"></i>
+      <span>{{ item.label }}</span>
+    </a>
+  </div>
+  <div class="flex gap-1">
+    <div class="profile-link">
+      <a class="menu-text" routerLink="/profile" pRipple>
+        <i class="pi pi-user"></i>
+        <span>Profile</span>
+      </a>
+    </div>
+    <div class="logout-link">
+      <a class="menu-text" (click)="logout()" pRipple>
+        <i class="pi pi-sign-out"></i>
+      </a>
+    </div>
+  </div>
+</div>

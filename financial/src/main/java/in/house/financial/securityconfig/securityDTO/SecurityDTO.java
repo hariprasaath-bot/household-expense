@@ -6,5 +6,8 @@ import lombok.Data;
 @Data
 @Builder
 public class SecurityDTO {
-    private String token;
+    private String accessToken;
+    private String refreshToken;
+    private String userId;
+    private String email;
 }

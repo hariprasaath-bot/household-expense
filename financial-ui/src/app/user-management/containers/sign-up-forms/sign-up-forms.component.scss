@@ -1,0 +1,190 @@
+.red-icon {
+  color: var(--boiling-color);
+}
+
+:host ::ng-deep .card-container {
+  .card {
+    &.styled-box-orange {
+      .p-ink {
+        background: rgba(232, 138, 50, 0.3);
+      }
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.section-style {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px; // Reduced gap for a tighter layout
+
+  .form-container {
+    display: flex;
+    justify-content: center; // Center the form
+    align-items: center;
+    flex-direction: column;
+    gap: 20px; // Reduced gap
+    margin-top: 50px; // Reduced margin
+
+    .form-style {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 15px; // Reduced gap
+    }
+  }
+
+  .submit-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 20px; // Reduced gap
+  }
+}
+
+.custom-field {
+  position: relative;
+  font-size: 14px;
+  border-top: 20px solid transparent;
+  margin-bottom: 5px;
+  display: inline-block;
+  --field-padding: 12px;
+}
+.boiled {
+  color: var(--boiling-color) !important;
+}
+
+.custom-field input {
+  border: none;
+  appearance: none;
+  background: transparent !important;
+  padding: 14px;
+  border-radius: 3px;
+  width: 250px;
+  outline: none;
+  font-size: 14px;
+  color: var(--draw-color);
+}
+
+.custom-field .placeholder {
+  position: absolute;
+  left: 4px;
+  width: calc(100% - (4px * 2));
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  top: 22px;
+  line-height: 100%;
+  transform: translateY(-50%);
+  color: var(--boiling-color);
+  transition: top 0.3s ease, color 0.3s ease, font-size 0.3s ease;
+}
+
+.custom-field input.active-border+.placeholder,
+.custom-field input:focus+.placeholder,
+.custom-field input:not(:placeholder-shown)+.placeholder {
+  top: -10px;
+  font-size: 10px;
+  color: var(--draw-color);
+}
+
+.custom-field.three {
+  --draw-color: chocolate;
+  --draw-duration: 0.3s;
+  --draw-line-width: 3px;
+  --draw-easing: linear;
+}
+
+.custom-field.three .border {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: none;
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+  border-radius: 3px;
+}
+
+.custom-field.three .border::after,
+.custom-field.three .border::before {
+  content: "";
+  width: 0;
+  height: 0;
+  display: inline-block;
+  position: absolute;
+  border-radius: 3px;
+}
+
+.custom-field.three .border::before {
+  left: 0;
+  bottom: 0;
+  border-right: 0px solid var(--draw-color);
+  border-bottom: 0px solid var(--draw-color);
+  transition: border 0s linear calc(var(--draw-duration) * 4), height var(--draw-duration) var(--draw-easing) calc(var(--draw-duration) * 2), width var(--draw-duration) var(--draw-easing) calc(var(--draw-duration) * 3);
+}
+
+.custom-field.three .border::after {
+  right: 0;
+  top: 0;
+  border-left: 0px solid var(--draw-color);
+  border-top: 0px solid var(--draw-color);
+  transition: border 0s linear calc(var(--draw-duration) * 2), height var(--draw-duration) var(--draw-easing), width var(--draw-duration) var(--draw-easing) var(--draw-duration);
+}
+
+.custom-field.three input.active-border~.border::before,
+.custom-field.three input:focus~.border::before,
+.custom-field.three input:not(:placeholder-shown)~.border::before {
+  width: 100%;
+  height: 100%;
+  border-width: var(--draw-line-width);
+  transition-delay: 0s, var(--draw-duration), 0s;
+}
+
+.custom-field.three input.active-border~.border::after,
+.custom-field.three input:focus~.border::after,
+.custom-field.three input:not(:placeholder-shown)~.border::after {
+  width: 100%;
+  height: 100%;
+  border-width: var(--draw-line-width);
+  transition-delay: calc(var(--draw-duration) * 2), calc(var(--draw-duration) * 3), calc(var(--draw-duration) * 2);
+}
+
+.button-container {
+  display: flex;
+  padding: 8px;
+  border-radius: 8px;
+  width: 250px; // Match input width
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+  box-shadow: none;
+  border: 1.2px solid;
+  border-color: var(--boiling-color);
+  cursor: pointer;
+}
+
+.toggle-mode {
+  text-align: center;
+  margin-top: 1rem;
+
+  a {
+    color: var(--boiling-color);
+    cursor: pointer;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

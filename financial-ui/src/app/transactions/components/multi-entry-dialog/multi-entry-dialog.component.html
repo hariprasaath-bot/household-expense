@@ -1,0 +1,89 @@
+<p-dialog 
+  [header]="dialogTitle" 
+  [(visible)]="visible" 
+  [modal]="true" 
+  [style]="{width: '600px'}"
+  [closable]="true"
+  (onHide)="onCancel()">
+  
+  <form [formGroup]="dialogForm" (ngSubmit)="onSave()">
+    <div class="dialog-content">
+      <!-- Entries Table -->
+      <div class="entries-section" formArrayName="entries">
+        <p-table [value]="entries.controls" styleClass="p-datatable-sm">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Category</th>
+              <th>Amount</th>
+              <th style="width: 5rem; text-align: center;">Actions</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-entryCtrl let-i="rowIndex">
+            <tr [formGroupName]="i">
+              <td>
+                <input 
+                  pInputText 
+                  formControlName="category"
+                  placeholder="Enter category"
+                  class="form-control"
+                />
+              </td>
+              <td>
+                <input 
+                  type="text"
+                  pInputText
+                  appCalculateInput
+                  formControlName="value"
+                  placeholder="Enter amount"
+                  class="form-control"
+                />
+              </td>
+              <td style="text-align: center;">
+                <p-button 
+                  type="button"
+                  icon="pi pi-trash" 
+                  styleClass="p-button-danger p-button-sm p-button-text"
+                  (onClick)="removeEntry(i)"
+                  pTooltip="Remove entry">
+                </p-button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+
+      <!-- Add Entry Button -->
+      <div class="add-entry-action">
+        <p-button 
+          type="button"
+          label="Add Another Entry" 
+          icon="pi pi-plus"
+          (onClick)="addEntry()"
+          styleClass="p-button-sm p-button-outlined">
+        </p-button>
+      </div>
+
+      <!-- Cumulative Total -->
+      <div class="cumulative-total" *ngIf="entries.length > 0">
+        <strong>Cumulative Total: ₹{{getCumulativeTotal() | number:'1.2-2'}}</strong>
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <div class="dialog-footer">
+      <p-button 
+        label="Cancel" 
+        icon="pi pi-times" 
+        styleClass="p-button-text"
+        (onClick)="onCancel()">
+      </p-button>
+      <p-button 
+        label="Save All" 
+        icon="pi pi-check" 
+        [disabled]="dialogForm.invalid || entries.length === 0"
+        (onClick)="onSave()">
+      </p-button>
+    </div>
+  </ng-template>
+</p-dialog>

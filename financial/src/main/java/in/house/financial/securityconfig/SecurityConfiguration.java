@@ -33,21 +33,33 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request -> request.requestMatchers("/auth/signin").permitAll()
-                                .requestMatchers("/user/create").permitAll()
+                .authorizeHttpRequests(request -> request.requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/auth/signin").permitAll()
                                 .requestMatchers("/user/**").authenticated()
+                                .requestMatchers("finance/**").authenticated()
                                 .requestMatchers("/expense/**").authenticated()
                                 .requestMatchers("/statement").authenticated()
-                        )
+                                .requestMatchers("/bank/**").permitAll()
+                                .requestMatchers("/error").permitAll()
+                                .anyRequest().authenticated()
+                        ).exceptionHandling(exceptionHandlingConfigurer -> {
+                            exceptionHandlingConfigurer
+                                    .authenticationEntryPoint((request, response, authException) -> {
+                                        // Check if the error is because the resource doesn't exist (404) 
+                                        // by examining if this is a forwarded request
+                                        if (request.getAttribute("jakarta.servlet.forward.request_uri") != null) {
+                                            response.sendError(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase());
+                                        } else {
+                                            response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
+                                        }
+                                    })
+                                    .accessDeniedHandler((request, response, accessDeniedException) -> {
+                                        response.sendError(HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN.getReasonPhrase());
+                                    });
+                        })
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
                         jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        http.exceptionHandling(httpSecurityExceptionHandlingConfigurer -> {
-            httpSecurityExceptionHandlingConfigurer
-                    .authenticationEntryPoint((request,response,authException)->{
-                        response.addHeader(HttpHeaders.WWW_AUTHENTICATE,"Bearer realm=\"Restricted Content\"");
-                        response.sendError(HttpStatus.UNAUTHORIZED.value(),HttpStatus.UNAUTHORIZED.getReasonPhrase());
-                    });});
         return http.build();
     }
 

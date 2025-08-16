@@ -1,0 +1,49 @@
+<div class="summary-list-container">
+  <h2 class="page-title">Financial History</h2>
+  <div *ngIf="loading" class="loading-indicator">
+    <p>Loading summaries...</p>
+  </div>
+
+  <div *ngIf="!loading && summaries.length === 0" class="no-data-message">
+    <i class="pi pi-inbox"></i>
+    <p>No financial summaries found.</p>
+    <p>Create a new summary to get started.</p>
+  </div>
+
+  <div class="summary-grid" [@listAnimation]="summaries.length" *ngIf="!loading && summaries.length > 0">
+    <div *ngFor="let summary of summaries" class="summary-card-wrapper">
+      <p-card>
+        <ng-template pTemplate="title">
+          <div class="card-title">
+            <i class="pi pi-calendar"></i>
+            <span>{{ summary.timestamp | date:'fullDate' }}</span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="subtitle">
+          {{ summary.timestamp | date:'shortTime' }}
+        </ng-template>
+
+        <div class="summary-card-content">
+          <div class="summary-item assets">
+            <i class="pi pi-arrow-up-right"></i>
+            <div class="item-details">
+              <strong>Total Assets</strong>
+              <span>{{ (safeParseFloat(summary.bankBalance) + safeParseFloat(summary.kiteWallet) + safeParseFloat(summary.dcxWallet) + (safeParseFloat(summary.kitePosition) > 0 ? safeParseFloat(summary.kitePosition) : 0) + safeParseFloat(summary.kiteHolding) + (safeParseFloat(summary.dcxPosition) > 0 ? safeParseFloat(summary.dcxPosition) : 0)) | currency:'INR' }}</span>
+            </div>
+          </div>
+          <div class="summary-item liabilities">
+            <i class="pi pi-arrow-down-left"></i>
+            <div class="item-details">
+              <strong>Total Liabilities</strong>
+              <span>{{ (safeParseFloat(summary.rupayCardBill) + safeParseFloat(summary.amazonCardBill) + safeParseFloat(summary.expense) + safeParseFloat(summary.loss) + (safeParseFloat(summary.kitePosition) < 0 ? Math.abs(safeParseFloat(summary.kitePosition)) : 0) + (safeParseFloat(summary.dcxPosition) < 0 ? Math.abs(safeParseFloat(summary.dcxPosition)) : 0)) | currency:'INR' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <ng-template pTemplate="footer">
+          <p-button label="View & Edit" icon="pi pi-pencil" styleClass="p-button-sm p-button-secondary" (onClick)="editSummary(summary.id)"></p-button>
+        </ng-template>
+      </p-card>
+    </div>
+  </div>
+</div>

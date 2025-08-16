@@ -1,0 +1,110 @@
+:host ::ng-deep .p-inputtext {
+  background-color: #3c3c3c !important;
+  color: #f0f0f0 !important;
+  border: 1px solid #666 !important;
+  width: 100%;
+
+  &:focus {
+    border-color: #ff8c00 !important;
+    box-shadow: 0 0 0 1px #ff8c00 !important;
+  }
+
+  &::placeholder {
+    color: #999 !important;
+  }
+}
+
+:host ::ng-deep {
+  .p-dialog {
+    background-color: #1a1a1a; // Dark background for the dialog
+    border: 1px solid chocolate;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(210, 105, 30, 0.3);
+
+    .p-dialog-header {
+      background-color: transparent;
+      color: chocolate;
+      border-bottom: 1px solid chocolate;
+      padding: 1rem 1.5rem;
+
+      .p-dialog-title {
+        font-size: 1.25rem;
+      }
+
+      .p-dialog-header-icon {
+        color: #d2691e;
+        &:hover {
+          color: darken(chocolate, 10%);
+        }
+      }
+    }
+
+    .p-dialog-content {
+      padding: 1.5rem;
+      color: #d2691e;
+    }
+
+    .p-dialog-footer {
+      border-top: 1px solid chocolate;
+      padding: 1rem 1.5rem;
+      background-color: transparent;
+    }
+  }
+
+  .entries-section {
+    .p-datatable {
+      .p-datatable-thead > tr > th {
+        background-color: rgba(210, 105, 30, 0.1);
+        color: chocolate;
+        border: none;
+      }
+
+      .p-datatable-tbody > tr {
+        background-color: transparent;
+        color: #d2691e;
+
+        > td {
+          border: none;
+          padding: 0.75rem;
+          vertical-align: middle;
+        }
+      }
+    }
+  }
+
+  .form-control {
+    background: rgba(210, 105, 30, 0.1);
+    border: 1px solid chocolate;
+    color: #d2691e;
+    width: 100%;
+
+    &:focus {
+      box-shadow: 0 0 0 2px rgba(210, 105, 30, 0.2);
+    }
+  }
+
+  .add-entry-action {
+    margin-top: 1rem;
+    text-align: left;
+  }
+
+  .cumulative-total {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: rgba(210, 105, 30, 0.1);
+    border-radius: 8px;
+    text-align: right;
+    font-size: 1.1rem;
+    color: chocolate;
+
+    strong {
+      font-weight: 600;
+    }
+  }
+
+  .dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+}
